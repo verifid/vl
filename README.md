@@ -1,3 +1,3 @@
 # vl
 
-Identity verification layer on server.
+Self deployed identity verification layer.
