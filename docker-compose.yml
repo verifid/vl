@@ -1,0 +1,10 @@
+version: '3.7'
+services:
+  web:
+    build: .
+    ports:
+     - "80:80"
+    environment:
+     - SCHEME=http
+     - IP_ADDRESS=127.0.0.1
+     - PORT=80
