@@ -13,3 +13,7 @@ __version__      = '0.1'
 __url__          = 'https://github.com/verifid/vl'
 __download_url__ = 'https://github.com/verifid/vl'
 __description__  = 'Self deployed identity verification layer.'
+
+from .app import (
+    InformationHandler
+)
