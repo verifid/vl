@@ -16,4 +16,6 @@ install:
 # command to run tests
 script:
   - py.test -s -v --cov-report xml --cov=vl
-  - codecov
+
+after_success:
+  - codecov -t $CODECOV_TOKEN
