@@ -26,12 +26,12 @@ class AppTest(AsyncHTTPTestCase):
         return Application([(r'/informations', InformationHandler)], debug=True, autoreload=False)
 
     def test_post_informations(self):
-        post_data = {'name': 'Tony',
-                     'surname': 'Stark',
-                     'sex': 'M',
-                     'date_of_birth': '10.01.1980',
-                     'place_of_birth': 'London',
-                     'country': 'USA'}
+        post_data = {"name": "Tony",
+                     "surname": "Stark",
+                     "sex": "M",
+                     "date_of_birth": "1980-10-01T00:00:00Z",
+                     "place_of_birth": "New York",
+                     "country": "USA"}
         body = urlencode(post_data)
         response = self.fetch(r'/informations', method='POST', body=body)
         self.assertEqual(response.code, 200)

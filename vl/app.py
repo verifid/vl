@@ -4,7 +4,8 @@
 import os
 import tornado.ioloop
 import tornado.web
-import json
+
+from vl.models import UserInformations
 
 try:
     scheme = os.environ['SCHEME']
@@ -18,9 +19,9 @@ except KeyError:
 class InformationHandler(tornado.web.RequestHandler):
 
     def post(self):
-        infomations = json.dumps({ k: self.get_argument(k) for k in self.request.arguments }, sort_keys=True)
+        user_informations = UserInformations.wrap(self.request.arguments)
         self.set_status(200)
-        return self.write(infomations)
+        return self.write(user_informations.to_json())
 
 def main():
     app = tornado.web.Application(
