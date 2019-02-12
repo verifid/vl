@@ -21,7 +21,12 @@ class InformationHandler(tornado.web.RequestHandler):
             'date_of_birth', 'place_of_birth', 'country']
 
     def __validate_json(self, arguments):
-        return set(arguments.keys()) == set(self.json_model)
+        if set(arguments.keys()) != set(self.json_model):
+            return False
+        for key in self.json_model:
+            if arguments[key] == None:
+                return False
+        return True
 
     def post(self):
         if self.__validate_json(self.request.arguments) == False:
