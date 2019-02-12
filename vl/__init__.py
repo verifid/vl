@@ -17,5 +17,3 @@ __description__  = 'Self deployed identity verification layer.'
 from .app import (
     InformationHandler
 )
-
-from .models import UserInformations

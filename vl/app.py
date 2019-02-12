@@ -6,8 +6,6 @@ import json
 import tornado.ioloop
 import tornado.web
 
-from vl.models import UserInformations
-
 try:
     scheme = os.environ['SCHEME']
     ip_address = os.environ['IP_ADDRESS']
