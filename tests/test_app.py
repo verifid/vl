@@ -52,7 +52,7 @@ class AppTest(AsyncHTTPTestCase):
 
     def test_post_informations_fail_with_missing_value(self):
         post_data = {"name": "Tony",
-                     "surname": "null",
+                     "surname": None,
                      "sex": "M",
                      "date_of_birth": "1980-10-01T00:00:00Z",
                      "place_of_birth": "New York"}
