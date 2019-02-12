@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import json
 import tornado.ioloop
 import tornado.web
 
@@ -18,10 +19,27 @@ except KeyError:
 
 class InformationHandler(tornado.web.RequestHandler):
 
+    json_model = ['name', 'surname', 'sex',
+            'date_of_birth', 'place_of_birth', 'country']
+
+    def __validate_json(self, arguments):
+        return set(arguments.keys()) == set(self.json_model)
+
     def post(self):
-        user_informations = UserInformations.wrap(self.request.arguments)
-        self.set_status(200)
-        return self.write(user_informations.to_json())
+        if self.__validate_json(self.request.arguments) == False:
+            self.set_status(400)
+            response = {
+                'error': True,
+                'message': 'Missing values'
+                }
+            return self.write(json.dumps(response, sort_keys=True))
+        else:
+            self.set_status(200)
+            response = {
+                'error': False,
+                'message': 'Values received!'
+                }
+            return self.write(json.dumps(response, sort_keys=True))
 
 def main():
     app = tornado.web.Application(

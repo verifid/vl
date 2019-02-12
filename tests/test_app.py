@@ -3,9 +3,11 @@
 
 import os
 import tornado.web
+import json
 
 from tornado.testing import AsyncHTTPTestCase
 from tornado.web import Application
+
 from vl import (
     InformationHandler
 )
@@ -25,7 +27,7 @@ class AppTest(AsyncHTTPTestCase):
     def get_app(self):
         return Application([(r'/informations', InformationHandler)], debug=True, autoreload=False)
 
-    def test_post_informations(self):
+    def test_post_informations_success(self):
         post_data = {"name": "Tony",
                      "surname": "Stark",
                      "sex": "M",
@@ -35,4 +37,15 @@ class AppTest(AsyncHTTPTestCase):
         body = urlencode(post_data)
         response = self.fetch(r'/informations', method='POST', body=body)
         self.assertEqual(response.code, 200)
-        self.assertEqual(response.body, b'{"country": "USA", "date_of_birth": "10.01.1980", "name": "Tony", "place_of_birth": "London", "sex": "M", "surname": "Stark"}')
+        self.assertEqual(response.body, b'{"error": false, "message": "Values received!"}')
+
+    def test_post_informations_fail(self):
+        post_data = {"name": "Tony",
+                     "surname": "Stark",
+                     "sex": "M",
+                     "date_of_birth": "1980-10-01T00:00:00Z",
+                     "place_of_birth": "New York"}
+        body = urlencode(post_data)
+        response = self.fetch(r'/informations', method='POST', body=body)
+        self.assertEqual(response.code, 400)
+        self.assertEqual(response.body, b'{"error": true, "message": "Missing values"}')
