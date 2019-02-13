@@ -12,14 +12,16 @@ try:
     scheme = os.environ['SCHEME']
     ip_address = os.environ['IP_ADDRESS']
     port = os.environ['PORT']
+    max_workers = os.environ['MAX_WORKERS']
 except KeyError:
     scheme = 'http'
     ip_address = 'localhost'
     port = 80
+    max_workers = 8
 
 class InformationHandler(tornado.web.RequestHandler):
 
-    executor = ThreadPoolExecutor(max_workers=8)
+    executor = ThreadPoolExecutor(max_workers=max_workers)
     json_model = ['name', 'surname', 'sex',
             'date_of_birth', 'place_of_birth', 'country']
 
