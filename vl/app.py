@@ -6,6 +6,8 @@ import json
 import tornado.ioloop
 import tornado.web
 
+from concurrent.futures import ThreadPoolExecutor
+
 try:
     scheme = os.environ['SCHEME']
     ip_address = os.environ['IP_ADDRESS']
@@ -17,6 +19,7 @@ except KeyError:
 
 class InformationHandler(tornado.web.RequestHandler):
 
+    executor = ThreadPoolExecutor(max_workers=8)
     json_model = ['name', 'surname', 'sex',
             'date_of_birth', 'place_of_birth', 'country']
 
