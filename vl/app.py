@@ -11,6 +11,11 @@ from tornado.concurrent import run_on_executor
 from facereg import google_images
 
 try:
+    from collections.abc import defaultdict, Mapping, namedtuple
+except ImportError:
+    from collections import defaultdict, Mapping, namedtuple
+
+try:
     scheme = os.environ['SCHEME']
     ip_address = os.environ['IP_ADDRESS']
     port = os.environ['PORT']
