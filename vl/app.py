@@ -29,7 +29,7 @@ except KeyError:
 class InformationHandler(tornado.web.RequestHandler):
 
     executor = ThreadPoolExecutor(max_workers=max_workers)
-    json_model = ['name', 'surname', 'sex',
+    json_model = ['name', 'surname', 'gender',
             'date_of_birth', 'place_of_birth', 'country']
 
     def __validate_json(self, arguments):

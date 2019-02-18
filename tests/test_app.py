@@ -30,7 +30,7 @@ class AppTest(AsyncHTTPTestCase):
     def test_post_informations_success(self):
         post_data = {"name": "Tony",
                      "surname": "Stark",
-                     "sex": "M",
+                     "gender": "M",
                      "date_of_birth": "1980-10-01T00:00:00Z",
                      "place_of_birth": "New York",
                      "country": "USA"}
@@ -42,7 +42,7 @@ class AppTest(AsyncHTTPTestCase):
     def test_post_informations_fail(self):
         post_data = {"name": "Tony",
                      "surname": "Stark",
-                     "sex": "M",
+                     "gender": "M",
                      "date_of_birth": "1980-10-01T00:00:00Z",
                      "place_of_birth": "New York"}
         body = urlencode(post_data)
@@ -53,7 +53,7 @@ class AppTest(AsyncHTTPTestCase):
     def test_post_informations_fail_with_missing_value(self):
         post_data = {"name": "Tony",
                      "surname": None,
-                     "sex": "M",
+                     "gender": "M",
                      "date_of_birth": "1980-10-01T00:00:00Z",
                      "place_of_birth": "New York"}
         body = urlencode(post_data)
