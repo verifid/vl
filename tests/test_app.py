@@ -25,7 +25,7 @@ class AppTest(AsyncHTTPTestCase):
         os.environ["ASYNC_TEST_TIMEOUT"] = str(20)
 
     def get_app(self):
-        return Application([(r'/informations', InformationHandler)], debug=True, autoreload=False)
+        return Application([(r'/userData', InformationHandler)], debug=True, autoreload=False)
 
     def test_post_informations_success(self):
         post_data = {"name": "Tony",
@@ -35,7 +35,7 @@ class AppTest(AsyncHTTPTestCase):
                      "place_of_birth": "New York",
                      "country": "USA"}
         body = urlencode(post_data)
-        response = self.fetch(r'/informations', method='POST', body=body)
+        response = self.fetch(r'/userData', method='POST', body=body)
         self.assertEqual(response.code, 200)
         self.assertEqual(response.body, b'{"error": false, "message": "Values received!"}')
 
@@ -46,7 +46,7 @@ class AppTest(AsyncHTTPTestCase):
                      "date_of_birth": "1980-10-01T00:00:00Z",
                      "place_of_birth": "New York"}
         body = urlencode(post_data)
-        response = self.fetch(r'/informations', method='POST', body=body)
+        response = self.fetch(r'/userData', method='POST', body=body)
         self.assertEqual(response.code, 400)
         self.assertEqual(response.body, b'{"error": true, "message": "Missing values"}')
 
@@ -57,6 +57,6 @@ class AppTest(AsyncHTTPTestCase):
                      "date_of_birth": "1980-10-01T00:00:00Z",
                      "place_of_birth": "New York"}
         body = urlencode(post_data)
-        response = self.fetch(r'/informations', method='POST', body=body)
+        response = self.fetch(r'/userData', method='POST', body=body)
         self.assertEqual(response.code, 400)
         self.assertEqual(response.body, b'{"error": true, "message": "Missing values"}')

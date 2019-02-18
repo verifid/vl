@@ -66,7 +66,7 @@ class InformationHandler(tornado.web.RequestHandler):
 
 def main():
     app = tornado.web.Application(
-        [(r'/informations', InformationHandler)],
+        [(r'/userData', InformationHandler)],
         debug=False,
         )
     app.listen(port)
