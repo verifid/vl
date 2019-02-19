@@ -5,6 +5,7 @@ import os
 import json
 import tornado.ioloop
 import tornado.web
+import logging
 
 from concurrent.futures import ThreadPoolExecutor
 from tornado.concurrent import run_on_executor
@@ -64,9 +65,34 @@ class InformationHandler(tornado.web.RequestHandler):
                 }
             return self.write(json.dumps(response, sort_keys=True))
 
+class UploadImageHandler(tornado.web.RequestHandler):
+
+    def post(self):
+        if self.request.files or self.request.files.items == None:
+            response = {
+                'error': True,
+                'message': 'No files found.'
+                }
+            self.set_status(412)
+            return self.write(json.dumps(response, sort_keys=True))    
+        for field_name, files in self.request.files.items():
+            for info in files:
+                filename, content_type = info["filename"], info["content_type"]
+                body = info["body"]
+                logging.info(
+                    'POST "%s" "%s" %d bytes', filename, content_type, len(body)
+                )
+        self.set_status(202)
+        response = {
+            'error': False,
+            'message': 'Image file received!'
+            }
+        return self.write(json.dumps(response, sort_keys=True))
+
 def main():
     app = tornado.web.Application(
-        [(r'/userData', InformationHandler)],
+        [(r'/userData', InformationHandler),
+         (r'/uploadImage', UploadImageHandler)],
         debug=False,
         )
     app.listen(port)
