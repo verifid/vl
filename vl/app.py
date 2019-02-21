@@ -10,6 +10,7 @@ import logging
 from concurrent.futures import ThreadPoolExecutor
 from tornado.concurrent import run_on_executor
 from facereg import google_images
+from urllib.parse import urlparse
 
 try:
     from collections.abc import defaultdict, Mapping, namedtuple
@@ -68,8 +69,8 @@ class InformationHandler(tornado.web.RequestHandler):
 class UploadImageHandler(tornado.web.RequestHandler):
 
     def post(self):
-        print(self.request)
-        if self.request.files or self.request.files.items == None:
+        print(self.request.files)
+        if len(self.request.files) == 0:
             response = {
                 'error': True,
                 'message': 'No files found.'

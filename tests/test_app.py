@@ -6,8 +6,12 @@ import tornado.web
 import json
 import requests
 
-from tornado.testing import AsyncHTTPTestCase
+from tornado.testing import (
+    AsyncHTTPTestCase,
+    gen_test
+)
 from tornado.web import Application
+from urllib.parse import urlunparse
 
 from vl import (
     InformationHandler,
@@ -64,18 +68,21 @@ class AppTest(AsyncHTTPTestCase):
         self.assertEqual(response.code, 400)
         self.assertEqual(response.body, b'{"error": true, "message": "Missing values"}')
 
+    @gen_test(timeout=100)
     def test_post_image(self):
         fpath = os.path.join(os.path.dirname(__file__), 'resources/test.png')
         image_file = open(fpath, 'rb')
         files = {'image': image_file}
         data = {}
-        request = requests.Request(url="http://localhost", files=files, data=data)
+        url = urlunparse(('http', 'localhost', '/uploadImage', None, None, None))
+        request = requests.Request(url=url, files=files, data=data)
         prepare = request.prepare()
         content_type = prepare.headers.get('Content-Type')
         body = prepare.body
-        url = r'/uploadImage'
         headers = {
             "Content-Type": content_type,
         }
-        response = self.fetch(url, method='POST', body=body, headers=headers)
-        self.assertEqual(response.code, 200)
+        response = yield self.http_client.fetch(self.get_url("/uploadImage"), method='POST',
+                                        body=body, headers=headers)
+        self.assertEqual(response.code, 202)
+        self.assertEqual(response.body, b'{"error": false, "message": "Image file received!"}')
