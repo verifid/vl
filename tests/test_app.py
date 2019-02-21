@@ -4,12 +4,14 @@
 import os
 import tornado.web
 import json
+import requests
 
 from tornado.testing import AsyncHTTPTestCase
 from tornado.web import Application
 
 from vl import (
-    InformationHandler
+    InformationHandler,
+    UploadImageHandler
 )
 
 try:
@@ -25,7 +27,8 @@ class AppTest(AsyncHTTPTestCase):
         os.environ["ASYNC_TEST_TIMEOUT"] = str(20)
 
     def get_app(self):
-        return Application([(r'/userData', InformationHandler)], debug=True, autoreload=False)
+        return Application([(r'/userData', InformationHandler),
+                        (r'/uploadImage', UploadImageHandler)], debug=True, autoreload=False)
 
     def test_post_informations_success(self):
         post_data = {"name": "Tony",
@@ -60,3 +63,19 @@ class AppTest(AsyncHTTPTestCase):
         response = self.fetch(r'/userData', method='POST', body=body)
         self.assertEqual(response.code, 400)
         self.assertEqual(response.body, b'{"error": true, "message": "Missing values"}')
+
+    def test_post_image(self):
+        fpath = os.path.join(os.path.dirname(__file__), 'resources/test.png')
+        image_file = open(fpath, 'rb')
+        files = {'image': image_file}
+        data = {}
+        request = requests.Request(url="http://localhost", files=files, data=data)
+        prepare = request.prepare()
+        content_type = prepare.headers.get('Content-Type')
+        body = prepare.body
+        url = r'/uploadImage'
+        headers = {
+            "Content-Type": content_type,
+        }
+        response = self.fetch(url, method='POST', body=body, headers=headers)
+        self.assertEqual(response.code, 200)

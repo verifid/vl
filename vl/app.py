@@ -68,6 +68,7 @@ class InformationHandler(tornado.web.RequestHandler):
 class UploadImageHandler(tornado.web.RequestHandler):
 
     def post(self):
+        print(self.request)
         if self.request.files or self.request.files.items == None:
             response = {
                 'error': True,
