@@ -5,6 +5,7 @@ import os
 import json
 import tornado.ioloop
 import tornado.web
+import tornado.httpserver
 import logging
 
 from concurrent.futures import ThreadPoolExecutor
@@ -97,7 +98,8 @@ def main():
          (r'/uploadImage', UploadImageHandler)],
         debug=False,
         )
-    app.listen(port)
+    server = tornado.httpserver.HTTPServer(app)
+    server.listen(8888)
     tornado.ioloop.IOLoop.current().start()
 
 if __name__ == "__main__":
