@@ -93,13 +93,14 @@ class UploadImageHandler(tornado.web.RequestHandler):
         return self.write(json.dumps(response, sort_keys=True))
 
 def main():
+    port = int(os.environ.get("PORT", 5000))
     app = tornado.web.Application(
         [(r'/userData', InformationHandler),
          (r'/uploadImage', UploadImageHandler)],
         debug=False,
         )
     server = tornado.httpserver.HTTPServer(app)
-    server.listen(8888)
+    server.listen(port)
     tornado.ioloop.IOLoop.current().start()
 
 if __name__ == "__main__":
