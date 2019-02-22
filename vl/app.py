@@ -93,9 +93,11 @@ class UploadImageHandler(tornado.web.RequestHandler):
         return self.write(json.dumps(response, sort_keys=True))
 
 def main():
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get('PORT', 5000))
+    root = os.path.dirname(__file__)
     app = tornado.web.Application(
-        [(r'/userData', InformationHandler),
+        [(r'/(.*)', tornado.web.StaticFileHandler, {'path': root, 'default_filename': 'index.html'}),
+         (r'/userData', InformationHandler),
          (r'/uploadImage', UploadImageHandler)],
         debug=False,
         )
