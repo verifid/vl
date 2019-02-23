@@ -29,7 +29,7 @@ except KeyError:
     port = 80
     max_workers = 8
 
-class InformationHandler(tornado.web.RequestHandler):
+class UserDataHandler(tornado.web.RequestHandler):
 
     executor = ThreadPoolExecutor(max_workers=max_workers)
     json_model = ['name', 'surname', 'gender',
@@ -70,7 +70,6 @@ class InformationHandler(tornado.web.RequestHandler):
 class UploadImageHandler(tornado.web.RequestHandler):
 
     def post(self):
-        print(self.request.files)
         if len(self.request.files) == 0:
             response = {
                 'error': True,
@@ -97,7 +96,7 @@ def main():
     root = os.path.dirname(__file__)
     app = tornado.web.Application(
         [(r'/(.*)', tornado.web.StaticFileHandler, {'path': root, 'default_filename': 'index.html'}),
-         (r'/userData', InformationHandler),
+         (r'/userData', UserDataHandler),
          (r'/uploadImage', UploadImageHandler)],
         debug=False,
         )

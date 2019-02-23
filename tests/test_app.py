@@ -14,7 +14,7 @@ from tornado.web import Application
 from urllib.parse import urlunparse
 
 from vl import (
-    InformationHandler,
+    UserDataHandler,
     UploadImageHandler
 )
 
@@ -31,7 +31,7 @@ class AppTest(AsyncHTTPTestCase):
         os.environ["ASYNC_TEST_TIMEOUT"] = str(20)
 
     def get_app(self):
-        return Application([(r'/userData', InformationHandler),
+        return Application([(r'/userData', UserDataHandler),
                         (r'/uploadImage', UploadImageHandler)], debug=True, autoreload=False)
 
     def test_post_informations_success(self):
