@@ -41,10 +41,9 @@ class AppTest(AsyncHTTPTestCase):
                      "date_of_birth": "1980-10-01T00:00:00Z",
                      "place_of_birth": "New York",
                      "country": "USA"}
-        body = urlencode(post_data)
+        body = json.dumps(post_data, sort_keys=True)
         response = self.fetch(r'/userData', method='POST', body=body)
         self.assertEqual(response.code, 200)
-        self.assertEqual(response.body, b'{"error": false, "message": "Values received!"}')
 
     def test_post_informations_fail(self):
         post_data = {"name": "Tony",
@@ -52,7 +51,7 @@ class AppTest(AsyncHTTPTestCase):
                      "gender": "M",
                      "date_of_birth": "1980-10-01T00:00:00Z",
                      "place_of_birth": "New York"}
-        body = urlencode(post_data)
+        body = json.dumps(post_data, sort_keys=True)
         response = self.fetch(r'/userData', method='POST', body=body)
         self.assertEqual(response.code, 400)
         self.assertEqual(response.body, b'{"error": true, "message": "Missing values"}')
@@ -63,7 +62,7 @@ class AppTest(AsyncHTTPTestCase):
                      "gender": "M",
                      "date_of_birth": "1980-10-01T00:00:00Z",
                      "place_of_birth": "New York"}
-        body = urlencode(post_data)
+        body = json.dumps(post_data, sort_keys=True)
         response = self.fetch(r'/userData', method='POST', body=body)
         self.assertEqual(response.code, 400)
         self.assertEqual(response.body, b'{"error": true, "message": "Missing values"}')

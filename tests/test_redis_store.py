@@ -4,7 +4,7 @@
 import unittest
 import fakeredis
 
-from vl import RedisStore
+from vl.redis_store import RedisStore
 
 class RedisStoreTest(unittest.TestCase):
 

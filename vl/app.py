@@ -7,11 +7,14 @@ import tornado.ioloop
 import tornado.web
 import tornado.httpserver
 import logging
+import uuid
 
 from concurrent.futures import ThreadPoolExecutor
 from tornado.concurrent import run_on_executor
 from facereg import google_images
 from urllib.parse import urlparse
+from redis import Redis
+from vl.redis_store import RedisStore
 
 try:
     from collections.abc import defaultdict, Mapping, namedtuple
@@ -29,19 +32,25 @@ except KeyError:
     port = 80
     max_workers = 8
 
+redis = Redis(host='redis', port=6379)
+store = RedisStore(redis)
+
 class UserDataHandler(tornado.web.RequestHandler):
 
     executor = ThreadPoolExecutor(max_workers=max_workers)
     json_model = ['name', 'surname', 'gender',
             'date_of_birth', 'place_of_birth', 'country']
 
-    def __validate_json(self, arguments):
-        if set(arguments.keys()) != set(self.json_model):
+    def __validate_json(self, json_object):
+        if set(json_object.keys()) != set(self.json_model):
             return False
         for key in self.json_model:
-            if arguments[key] == None:
+            if json_object[key] == None:
                 return False
         return True
+
+    def __uuid(self):
+        return str(uuid.uuid4())
 
     @run_on_executor
     def __download_images(self, name, surname):
@@ -51,7 +60,8 @@ class UserDataHandler(tornado.web.RequestHandler):
 
     @tornado.gen.coroutine
     def post(self):
-        if self.__validate_json(self.request.arguments) == False:
+        json_object = json.loads(self.request.body)
+        if self.__validate_json(json_object) == False:
             self.set_status(400)
             response = {
                 'error': True,
@@ -59,11 +69,14 @@ class UserDataHandler(tornado.web.RequestHandler):
                 }
             return self.write(json.dumps(response, sort_keys=True))
         else:
-            yield self.__download_images(self.get_argument('name'), self.get_argument('surname'))
+            yield self.__download_images(json_object['name'], json_object['surname'])
+            uuid = self.__uuid()
+            store.keep(uuid, self.request.body)
             self.set_status(200)
             response = {
                 'error': False,
-                'message': 'Values received!'
+                'message': 'Values received!',
+                'userId': uuid
                 }
             return self.write(json.dumps(response, sort_keys=True))
 
