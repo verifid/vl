@@ -5,3 +5,4 @@ codecov
 tox
 tox-pyenv
 requests
+fakeredis

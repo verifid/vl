@@ -18,3 +18,5 @@ from .app import (
     UserDataHandler,
     UploadImageHandler
 )
+
+from .redis_store import RedisStore
