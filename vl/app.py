@@ -52,6 +52,16 @@ class UserDataHandler(tornado.web.RequestHandler):
     def __uuid(self):
         return str(uuid.uuid4())
 
+    def set_default_headers(self):
+        print('set headers!!')
+        self.set_header('Access-Control-Allow-Origin', '*')
+        self.set_header('Access-Control-Allow-Headers', '*')
+        self.set_header('Access-Control-Max-Age', 1000)
+        self.set_header('Content-type', 'application/json')
+        self.set_header('Access-Control-Allow-Methods', 'POST')
+        self.set_header('Access-Control-Allow-Headers',
+                        'Content-Type, Access-Control-Allow-Origin, Access-Control-Allow-Headers, X-Requested-By, Access-Control-Allow-Methods')
+
     @run_on_executor
     def __download_images(self, name, surname):
         output_directory = os.getcwd() + '/datasets'
@@ -108,7 +118,7 @@ def main():
     port = int(os.environ.get('PORT', 5000))
     root = os.path.dirname(__file__)
     app = tornado.web.Application(
-        [(r'/(.*)', tornado.web.StaticFileHandler, {'path': root, 'default_filename': 'index.html'}),
+        [(r'/', tornado.web.StaticFileHandler, {'path': root, 'default_filename': 'index.html'}),
          (r'/userData', UserDataHandler),
          (r'/uploadImage', UploadImageHandler)],
         debug=False,
