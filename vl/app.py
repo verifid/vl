@@ -63,8 +63,8 @@ class UserDataHandler(tornado.web.RequestHandler):
                         'Content-Type, Access-Control-Allow-Origin, Access-Control-Allow-Headers, X-Requested-By, Access-Control-Allow-Methods')
 
     @run_on_executor
-    def __download_images(self, name, surname):
-        output_directory = os.getcwd() + '/datasets'
+    def __download_images(self, name, surname, user_id):
+        output_directory = os.getcwd() + '/datasets/' + user_id
         _, _ = google_images.download(str.format('{0} {1}', name, surname),
                                 limit=3, output_directory=output_directory)
 
@@ -79,8 +79,8 @@ class UserDataHandler(tornado.web.RequestHandler):
                 }
             return self.write(json.dumps(response, sort_keys=True))
         else:
-            yield self.__download_images(json_object['name'], json_object['surname'])
             uuid = self.__uuid()
+            yield self.__download_images(json_object['name'], json_object['surname'], uuid)
             store.keep(uuid, self.request.body)
             self.set_status(200)
             response = {
