@@ -15,6 +15,7 @@ from facereg import google_images
 from urllib.parse import urlparse
 from redis import Redis
 from vl.redis_store import RedisStore
+from enum import Enum
 
 try:
     from collections.abc import defaultdict, Mapping, namedtuple
@@ -92,7 +93,40 @@ class UserDataHandler(tornado.web.RequestHandler):
 
 class UploadImageHandler(tornado.web.RequestHandler):
 
+    class ValidationError(Enum):
+        MISSING_DATA = 1
+        NO_USER_FOUND = 2
+        USER_FOUND = 3
+
+        def read_response(self, argument):
+            switcher = {
+                1: (400, {'error': True,
+                    'message': 'No user id found on request.'}),
+                2: (200, {'error': True,
+                    'message': 'No user found with given id.'}),
+                3: (200, {'error': False,
+                    'message': 'User found with given id.'})
+            }
+            return switcher.get(argument, "Invalid argument")
+
+        def __str__(self):
+            return self.read_response(self._value_)
+
+    def __validate_arguments(self, arguments):
+        if 'userId' not in arguments:
+            return UploadImageHandler.ValidationError.MISSING_DATA
+        user_id = str(arguments['userId'])
+        if store.value_of(user_id) == None:
+            return UploadImageHandler.ValidationError.NO_USER_FOUND
+        return UploadImageHandler.ValidationError.USER_FOUND
+
     def post(self):
+        validation_error = self.__validate_arguments(self.request.arguments)
+        if validation_error != UploadImageHandler.ValidationError.USER_FOUND:
+            status_code, response = validation_error.__str__()
+            print(status_code, response)
+            self.set_status(status_code)
+            return self.write(json.dumps(response, sort_keys=True))    
         if len(self.request.files) == 0:
             response = {
                 'error': True,

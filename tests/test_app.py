@@ -5,6 +5,7 @@ import os
 import tornado.web
 import json
 import requests
+import pytest
 
 from tornado.testing import (
     AsyncHTTPTestCase,
@@ -25,6 +26,8 @@ except ImportError:
 
 class AppTest(AsyncHTTPTestCase):
 
+    user_id = ''
+
     def setUp(self):
         super(AppTest, self).setUp()
         # allow more time before timeout since we are doing remote access..
@@ -34,6 +37,7 @@ class AppTest(AsyncHTTPTestCase):
         return Application([(r'/userData', UserDataHandler),
                         (r'/uploadImage', UploadImageHandler)], debug=True, autoreload=False)
 
+    @pytest.mark.run(order=1)
     def test_post_informations_success(self):
         post_data = {"name": "Tony",
                      "surname": "Stark",
@@ -43,8 +47,11 @@ class AppTest(AsyncHTTPTestCase):
                      "country": "USA"}
         body = json.dumps(post_data, sort_keys=True)
         response = self.fetch(r'/userData', method='POST', body=body)
+        response_dict = json.loads(response.body)
+        type(self).user_id = response_dict['userId']
         self.assertEqual(response.code, 200)
 
+    @pytest.mark.run(order=2)
     def test_post_informations_fail(self):
         post_data = {"name": "Tony",
                      "surname": "Stark",
@@ -56,6 +63,7 @@ class AppTest(AsyncHTTPTestCase):
         self.assertEqual(response.code, 400)
         self.assertEqual(response.body, b'{"error": true, "message": "Missing values"}')
 
+    @pytest.mark.run(order=3)
     def test_post_informations_fail_with_missing_value(self):
         post_data = {"name": "Tony",
                      "surname": None,
@@ -67,12 +75,13 @@ class AppTest(AsyncHTTPTestCase):
         self.assertEqual(response.code, 400)
         self.assertEqual(response.body, b'{"error": true, "message": "Missing values"}')
 
+    @pytest.mark.run(order=4)
     @gen_test(timeout=100)
     def test_post_image(self):
         fpath = os.path.join(os.path.dirname(__file__), 'resources/test.png')
         image_file = open(fpath, 'rb')
         files = {'image': image_file}
-        data = {}
+        data = {'userId': type(self).user_id}
         url = urlunparse(('http', 'localhost', '/uploadImage', None, None, None))
         request = requests.Request(url=url, files=files, data=data)
         prepare = request.prepare()

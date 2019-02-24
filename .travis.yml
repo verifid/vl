@@ -7,6 +7,9 @@ python:
   - "3.7-dev"
   - "nightly"
 
+before_script:
+  - sudo redis-server /etc/redis/redis.conf --port 6379
+
 # command to install dependencies
 install:
   - pip install -r requirements.txt --upgrade
