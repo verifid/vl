@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vl
+spec:
+  selector:
+    matchLabels:
+      app: vl
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: vl
+    spec:
+      containers:
+      - image: verifid/vl:0.1
+        name: vl
+        imagePullPolicy: Always
+        ports:
+          - name: http
+            containerPort: 80
