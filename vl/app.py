@@ -29,7 +29,7 @@ try:
 except KeyError:
     scheme = 'http'
     ip_address = 'localhost'
-    port = 80
+    port = 5000
     max_workers = 8
 
 redis = Redis(host='redis', port=6379)
