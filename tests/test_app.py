@@ -16,7 +16,8 @@ from urllib.parse import urlunparse
 
 from vl import (
     UserDataHandler,
-    UploadImageHandler
+    UploadImageHandler,
+    app
 )
 
 try:
@@ -30,12 +31,11 @@ class AppTest(AsyncHTTPTestCase):
 
     def setUp(self):
         super(AppTest, self).setUp()
-        # allow more time before timeout since we are doing remote access..
+        # allow more time before timeout since we are doing remote access.
         os.environ["ASYNC_TEST_TIMEOUT"] = str(20)
 
     def get_app(self):
-        return Application([(r'/userData', UserDataHandler),
-                        (r'/uploadImage', UploadImageHandler)], debug=True, autoreload=False)
+        return app.create_app()
 
     @pytest.mark.run(order=1)
     def test_post_informations_success(self):
@@ -47,7 +47,7 @@ class AppTest(AsyncHTTPTestCase):
                      "country": "USA"}
         body = json.dumps(post_data, sort_keys=True)
         response = self.fetch(r'/userData', method='POST', body=body)
-        response_dict = json.loads(response.body)
+        response_dict = json.loads(response.body.decode('utf-8'))
         type(self).user_id = response_dict['userId']
         self.assertEqual(response.code, 200)
 

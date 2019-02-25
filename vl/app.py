@@ -33,8 +33,13 @@ except KeyError:
     port = 5000
     max_workers = 8
 
-redis = Redis(host='redis', port=6379)
+redis = Redis(host='localhost', port=6379)
 store = RedisStore(redis)
+
+class MainHandler(tornado.web.RequestHandler):
+
+    def get(self):
+        self.render("index.html")
 
 class UserDataHandler(tornado.web.RequestHandler):
 
@@ -54,7 +59,6 @@ class UserDataHandler(tornado.web.RequestHandler):
         return str(uuid.uuid4())
 
     def set_default_headers(self):
-        print('set headers!!')
         self.set_header('Access-Control-Allow-Origin', '*')
         self.set_header('Access-Control-Allow-Headers', '*')
         self.set_header('Access-Control-Max-Age', 1000)
@@ -71,7 +75,7 @@ class UserDataHandler(tornado.web.RequestHandler):
 
     @tornado.gen.coroutine
     def post(self):
-        json_object = json.loads(self.request.body)
+        json_object = json.loads(self.request.body.decode('utf-8'))
         if self.__validate_json(json_object) == False:
             self.set_status(400)
             response = {
@@ -148,18 +152,16 @@ class UploadImageHandler(tornado.web.RequestHandler):
             }
         return self.write(json.dumps(response, sort_keys=True))
 
-def main():
-    port = int(os.environ.get('PORT', 5000))
-    root = os.path.dirname(__file__)
-    app = tornado.web.Application(
-        [(r'/', tornado.web.StaticFileHandler, {'path': root, 'default_filename': 'index.html'}),
+def create_app():
+    return tornado.web.Application(
+        [(r'/', MainHandler),
          (r'/userData', UserDataHandler),
          (r'/uploadImage', UploadImageHandler)],
         debug=False,
         )
-    server = tornado.httpserver.HTTPServer(app)
-    server.listen(port)
-    tornado.ioloop.IOLoop.current().start()
 
 if __name__ == "__main__":
-    main()
+    port = int(os.environ.get('PORT', 5000))
+    server = tornado.httpserver.HTTPServer(create_app())
+    server.listen(port)
+    tornado.ioloop.IOLoop.current().start()
