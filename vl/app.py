@@ -130,7 +130,6 @@ class UploadImageHandler(tornado.web.RequestHandler):
         validation_error = self.__validate_arguments(self.request.arguments)
         if validation_error != UploadImageHandler.ValidationError.USER_FOUND:
             status_code, response = validation_error.__str__()
-            print(status_code, response)
             self.set_status(status_code)
             return self.write(json.dumps(response, sort_keys=True))    
         if len(self.request.files) == 0:
@@ -147,7 +146,7 @@ class UploadImageHandler(tornado.web.RequestHandler):
                 logging.info(
                     'POST "%s" "%s" %d bytes', filename, content_type, len(body)
                 )
-        self.set_status(202)
+        self.set_status(200)
         response = {
             'error': False,
             'message': 'Image file received!'

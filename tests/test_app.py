@@ -82,7 +82,7 @@ class AppTest(AsyncHTTPTestCase):
 
     @pytest.mark.run(order=4)
     @gen_test(timeout=100)
-    def test_post_image(self):
+    def test_post_image_success(self):
         fpath = os.path.join(os.path.dirname(__file__), 'resources/test.png')
         image_file = open(fpath, 'rb')
         files = {'image': image_file}
@@ -97,5 +97,25 @@ class AppTest(AsyncHTTPTestCase):
         }
         response = yield self.http_client.fetch(self.get_url("/uploadImage"), method='POST',
                                         body=body, headers=headers)
-        self.assertEqual(response.code, 202)
+        self.assertEqual(response.code, 200)
         self.assertEqual(response.body, b'{"error": false, "message": "Image file received!"}')
+
+    @pytest.mark.run(order=5)
+    @gen_test(timeout=100)
+    def test_post_image_fail(self):
+        fpath = os.path.join(os.path.dirname(__file__), 'resources/test.png')
+        image_file = open(fpath, 'rb')
+        files = {'image': image_file}
+        data = {'userId': 'user_id'}
+        url = urlunparse(('http', 'localhost', '/uploadImage', None, None, None))
+        request = requests.Request(url=url, files=files, data=data)
+        prepare = request.prepare()
+        content_type = prepare.headers.get('Content-Type')
+        body = prepare.body
+        headers = {
+            "Content-Type": content_type,
+        }
+        response = yield self.http_client.fetch(self.get_url("/uploadImage"), method='POST',
+                                        body=body, headers=headers)
+        self.assertEqual(response.code, 200)
+        self.assertEqual(response.body, b'{"error": true, "message": "No user found with given id."}')
