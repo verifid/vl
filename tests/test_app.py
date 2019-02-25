@@ -6,6 +6,7 @@ import tornado.web
 import json
 import requests
 import pytest
+import fakeredis
 
 from tornado.testing import (
     AsyncHTTPTestCase,
@@ -17,6 +18,7 @@ from urllib.parse import urlunparse
 from vl import (
     UserDataHandler,
     UploadImageHandler,
+    RedisStore,
     app
 )
 
@@ -24,6 +26,9 @@ try:
     from urllib import urlencode
 except ImportError:
     from urllib.parse import urlencode
+
+app.redis = fakeredis.FakeStrictRedis()
+app.store = RedisStore(app.redis)
 
 class AppTest(AsyncHTTPTestCase):
 

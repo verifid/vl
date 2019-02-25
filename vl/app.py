@@ -119,7 +119,9 @@ class UploadImageHandler(tornado.web.RequestHandler):
     def __validate_arguments(self, arguments):
         if 'userId' not in arguments:
             return UploadImageHandler.ValidationError.MISSING_DATA
-        user_id = str(arguments['userId'])
+        user_id = arguments.get('userId')
+        if isinstance(user_id, list):
+            user_id = user_id[0].decode('utf-8')
         if store.value_of(user_id) == None:
             return UploadImageHandler.ValidationError.NO_USER_FOUND
         return UploadImageHandler.ValidationError.USER_FOUND
