@@ -1,0 +1,120 @@
+---
+swagger: "2.0"
+info:
+  description: "VerifID - Identity Verification Layer"
+  version: "1.0.0"
+  title: "Identity Verification Layer"
+  license:
+    name: "MIT"
+    url: "https://github.com/verifid/vl/blob/master/LICENSE"
+host: "api.verifid.app"
+basePath: "/v1"
+tags:
+- name: "user"
+  description: "User going to identified."
+- name: "image"
+  description: "User's image is going to be used for verification."
+schemes:
+- "https"
+- "http"
+paths:
+  /userData:
+    post:
+      tags:
+      - "user"
+      summary: "Creates a user for verification."
+      description: ""
+      operationId: "user_data"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "User object that needs to be added temporarly"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        200:
+          description: "Values received and user created!"
+        405:
+          description: "Invalid input"
+      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+  /uploadImage:
+    post:
+      tags:
+      - "image"
+      summary: "Uploads an image"
+      description: ""
+      operationId: "upload_file"
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "userId"
+        in: "formData"
+        description: "ID of user to update"
+        required: true
+        type: "string"
+      - name: "file"
+        in: "formData"
+        description: "file to upload"
+        required: true
+        type: "file"
+      responses:
+        200:
+          description: "Successful operation."
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        204:
+          description: "Failed operation, no user found with given id."
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        400:
+          description: "Failed operation, no user id found on request."
+          schema:
+            $ref: "#/definitions/ApiResponse"
+      x-swagger-router-controller: "swagger_server.controllers.image_controller"
+definitions:
+  User:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      surname:
+        type: "string"
+      gender:
+        type: "string"
+      dateOfBirth:
+        type: "string"
+      placeOfBirth:
+        type: "string"
+      country:
+        type: "string"
+    example:
+      country: "country"
+      placeOfBirth: "placeOfBirth"
+      gender: "gender"
+      surname: "surname"
+      name: "name"
+      dateOfBirth: "dateOfBirth"
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
+    example:
+      code: 0
+      type: "type"
+      message: "message"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
