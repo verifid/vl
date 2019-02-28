@@ -126,6 +126,16 @@ class UploadImageHandler(tornado.web.RequestHandler):
             return UploadImageHandler.ValidationError.NO_USER_FOUND
         return UploadImageHandler.ValidationError.USER_FOUND
 
+    def __save_image(self, filename, body, arguments):
+        user_id = arguments.get('userId')
+        user_id = user_id[0].decode('utf-8')
+        dir = os.getcwd() + '/testsets/' + user_id + '/'
+        os.mkdir(dir)
+        file_path = dir + filename
+        file = open(file_path, 'wb')
+        file.write(body)
+        file.close()
+
     def post(self):
         validation_error = self.__validate_arguments(self.request.arguments)
         if validation_error != UploadImageHandler.ValidationError.USER_FOUND:
@@ -146,6 +156,7 @@ class UploadImageHandler(tornado.web.RequestHandler):
                 logging.info(
                     'POST "%s" "%s" %d bytes', filename, content_type, len(body)
                 )
+                self.__save_image(filename, body, self.request.arguments)
         self.set_status(200)
         response = {
             'error': False,

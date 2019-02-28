@@ -81,7 +81,7 @@ class AppTest(AsyncHTTPTestCase):
         self.assertEqual(response.body, b'{"error": true, "message": "Missing values"}')
 
     @pytest.mark.run(order=4)
-    @gen_test(timeout=100)
+    @gen_test(timeout=10)
     def test_post_image_success(self):
         fpath = os.path.join(os.path.dirname(__file__), 'resources/test.png')
         image_file = open(fpath, 'rb')
