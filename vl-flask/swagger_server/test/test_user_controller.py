@@ -17,7 +17,14 @@ class TestUserController(BaseTestCase):
 
         Creates a user for verification.
         """
-        body = User()
+        body = User.from_dict({
+                    'name': 'Tony',
+                    'surname': 'Stark',
+                    'gender': 'M',
+                    'dateOfBirth': '1980-10-01T00:00:00Z',
+                    'placeOfBirth': 'New York',
+                    'country': 'USA'
+                })
         response = self.client.open(
             '/v1/userData',
             method='POST',
