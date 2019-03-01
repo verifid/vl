@@ -101,3 +101,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# swagger-codegen-cli
+swagger-codegen-cli-2.3.1.jar
