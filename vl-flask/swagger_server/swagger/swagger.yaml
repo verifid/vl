@@ -18,13 +18,13 @@ schemes:
 - "https"
 - "http"
 paths:
-  /userData:
+  /user/sendData:
     post:
       tags:
       - "user"
       summary: "Creates a user for verification."
       description: ""
-      operationId: "user_data"
+      operationId: "send_data"
       consumes:
       - "application/json"
       produces:
@@ -42,13 +42,13 @@ paths:
         405:
           description: "Invalid input"
       x-swagger-router-controller: "swagger_server.controllers.user_controller"
-  /uploadImage:
+  /image/upload:
     post:
       tags:
       - "image"
       summary: "Uploads an image"
       description: ""
-      operationId: "upload_file"
+      operationId: "upload_image"
       consumes:
       - "multipart/form-data"
       produces:

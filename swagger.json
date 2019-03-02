@@ -26,14 +26,14 @@
     "http"
   ],
   "paths": {
-    "/userData": {
+    "/user/sendData": {
       "post": {
         "tags": [
           "user"
         ],
         "summary": "Creates a user for verification.",
         "description": "",
-        "operationId": "userData",
+        "operationId": "sendData",
         "consumes": [
           "application/json"
         ],
@@ -61,14 +61,14 @@
         }
       }
     },
-    "/uploadImage": {
+    "/image/upload": {
       "post": {
         "tags": [
           "image"
         ],
         "summary": "Uploads an image",
         "description": "",
-        "operationId": "uploadFile",
+        "operationId": "uploadImage",
         "consumes": [
           "multipart/form-data"
         ],

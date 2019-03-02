@@ -5,7 +5,7 @@ from swagger_server.models.api_response import ApiResponse  # noqa: E501
 from swagger_server import util
 
 
-def upload_file(userId, file):  # noqa: E501
+def upload_image(userId, file):  # noqa: E501
     """Uploads an image
 
      # noqa: E501

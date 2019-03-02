@@ -35,7 +35,7 @@ async def download_images(name, surname, user_id):
     _, _ = google_images.download(str.format('{0} {1}', name, surname),
                             limit=3, output_directory=output_directory)
 
-def user_data(body):
+def send_data(body):
     """Creates a user for verification.
 
     :param body: User object that needs to be added temporarly
