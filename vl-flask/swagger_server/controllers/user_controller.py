@@ -38,7 +38,7 @@ async def download_images(name, surname, user_id):
 def send_data(body):
     """Creates a user for verification.
 
-    :param body: User object that needs to be added temporarly
+    :param body: User object that needs to be added temporarly.
     :type body: dict | bytes
 
     :rtype: None

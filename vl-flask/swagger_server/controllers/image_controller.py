@@ -12,7 +12,7 @@ def upload_image(userId, file):  # noqa: E501
 
     :param userId: ID of user to update
     :type userId: str
-    :param file: file to upload
+    :param file: Image file to upload.
     :type file: werkzeug.datastructures.FileStorage
 
     :rtype: ApiResponse

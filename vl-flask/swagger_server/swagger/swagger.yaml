@@ -32,15 +32,15 @@ paths:
       parameters:
       - in: "body"
         name: "body"
-        description: "User object that needs to be added temporarly"
+        description: "User object that needs to be added temporarly."
         required: true
         schema:
           $ref: "#/definitions/User"
       responses:
         200:
           description: "Values received and user created!"
-        405:
-          description: "Invalid input"
+        400:
+          description: "Invalid request."
       x-swagger-router-controller: "swagger_server.controllers.user_controller"
   /image/upload:
     post:
@@ -61,7 +61,7 @@ paths:
         type: "string"
       - name: "file"
         in: "formData"
-        description: "file to upload"
+        description: "Image file to upload."
         required: true
         type: "file"
       responses:
