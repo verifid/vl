@@ -5,3 +5,4 @@ from __future__ import absolute_import
 # import models into model package
 from swagger_server.models.api_response import ApiResponse
 from swagger_server.models.user import User
+from swagger_server.models.user_data_response import UserDataResponse

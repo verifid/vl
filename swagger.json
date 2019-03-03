@@ -9,7 +9,7 @@
       "url": "https://github.com/verifid/vl/blob/master/LICENSE"
     }
   },
-  "host": "api.verifid.app",
+  "host": "localhost:8080",
   "basePath": "/v1",
   "tags": [
     {
@@ -53,10 +53,16 @@
         ],
         "responses": {
           "200": {
-            "description": "Values received and user created!"
+            "description": "Values received and user created!",
+            "schema": {
+              "$ref": "#/definitions/UserDataResponse"
+            }
           },
           "400": {
-            "description": "Invalid request."
+            "description": "Invalid request.",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
           }
         }
       }
@@ -149,6 +155,24 @@
           "type": "string"
         },
         "message": {
+          "type": "string"
+        }
+      }
+    },
+    "UserDataResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "type": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "userId": {
           "type": "string"
         }
       }

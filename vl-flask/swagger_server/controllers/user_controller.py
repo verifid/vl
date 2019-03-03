@@ -9,6 +9,7 @@ from swagger_server.store.redis_store import RedisStore
 from swagger_server.models.user import User
 from swagger_server import util
 from swagger_server.models.api_response import ApiResponse
+from swagger_server.models.user_data_response import UserDataResponse
 from redis import Redis
 from facereg import google_images
 
@@ -47,17 +48,19 @@ def send_data(body):
     if connexion.request.is_json:
         json_body = connexion.request.get_json()
         if validate_json(json_body) == False:
-            api_response = ApiResponse(code=400, type='error', message='Request has missing values.')
-            return api_response.to_str()
+            response = ApiResponse.from_dict({'code':400, 'type': 'error',
+                                        'message': 'Request has missing values.'})
+            return response.to_str()
         else:
             user = User.from_dict(json_body)
             u_id = user_id()
             loop.run_until_complete(download_images(user.name, user.surname, u_id))
             store.keep(u_id, body)
-            api_response = ApiResponse.from_dict({'code': 200, 'type': 'success', 
+            response = UserDataResponse.from_dict({'code': 200, 'type': 'success', 
                                         'message': 'User created with received values.',
                                         'userId': u_id})
-            return api_response.to_str()
+            return response.to_str()
     else:
-        api_response = ApiResponse(code=400, type='error', message='Request needs a user json object.')
-        return api_response.to_str()
+        response = ApiResponse.from_dict({'code':400, 'type': 'error',
+                                        'message': 'Request needs a user json object.'})
+        return response.to_str()

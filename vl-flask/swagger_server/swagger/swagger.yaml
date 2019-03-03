@@ -7,7 +7,7 @@ info:
   license:
     name: "MIT"
     url: "https://github.com/verifid/vl/blob/master/LICENSE"
-host: "api.verifid.app"
+host: "localhost:8080"
 basePath: "/v1"
 tags:
 - name: "user"
@@ -39,8 +39,12 @@ paths:
       responses:
         200:
           description: "Values received and user created!"
+          schema:
+            $ref: "#/definitions/UserDataResponse"
         400:
           description: "Invalid request."
+          schema:
+            $ref: "#/definitions/ApiResponse"
       x-swagger-router-controller: "swagger_server.controllers.user_controller"
   /image/upload:
     post:
@@ -115,6 +119,23 @@ definitions:
       code: 0
       type: "type"
       message: "message"
+  UserDataResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
+      userId:
+        type: "string"
+    example:
+      code: 0
+      type: "type"
+      message: "message"
+      userId: "userId"
 externalDocs:
   description: "Find out more about Swagger"
   url: "http://swagger.io"
