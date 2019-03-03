@@ -7,7 +7,7 @@ info:
   license:
     name: "MIT"
     url: "https://github.com/verifid/vl/blob/master/LICENSE"
-host: "localhost:8080"
+host: "api.verifid.app"
 basePath: "/v1"
 tags:
 - name: "user"
@@ -16,7 +16,6 @@ tags:
   description: "User's image is going to be used for verification."
 schemes:
 - "https"
-- "http"
 paths:
   /user/sendData:
     post:
