@@ -48,19 +48,18 @@ def send_data(body):
     if connexion.request.is_json:
         json_body = connexion.request.get_json()
         if validate_json(json_body) == False:
-            response = ApiResponse.from_dict({'code':400, 'type': 'error',
+            response = ApiResponse.from_dict({'code': 400, 'type': 'error',
                                         'message': 'Request has missing values.'})
             return response.to_str()
         else:
-            user = User.from_dict(json_body)
             u_id = user_id()
-            loop.run_until_complete(download_images(user.name, user.surname, u_id))
-            store.keep(u_id, body)
+            loop.run_until_complete(download_images(json_body['name'], json_body['surname'], u_id))
+            store.keep(u_id, json.dumps(json_body))
             response = UserDataResponse.from_dict({'code': 200, 'type': 'success', 
                                         'message': 'User created with received values.',
                                         'userId': u_id})
             return response.to_str()
     else:
-        response = ApiResponse.from_dict({'code':400, 'type': 'error',
+        response = ApiResponse.from_dict({'code': 400, 'type': 'error',
                                         'message': 'Request needs a user json object.'})
         return response.to_str()
