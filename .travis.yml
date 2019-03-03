@@ -1,21 +1,18 @@
 language: python
 
 python:
-  - "3.4"
-  # - "3.5"
   - "3.6"
   - "3.7-dev"
   - "nightly"
 
 # command to install dependencies
 install:
-  - pip install -r requirements.txt --upgrade
-  - pip install -r requirements.testing.txt --upgrade
-  - pip install -e .
+  - pip install -r vl/requirements.txt --upgrade
+  - pip install -r vl/requirements.testing.txt --upgrade
 
 # command to run tests
 script:
-  - py.test -s -v --cov-report xml --cov=vl
+  - py.test -s -v --cov-report xml --cov=vl/swagger_server
 
 after_success:
   - codecov
