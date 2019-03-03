@@ -12,9 +12,10 @@ redis = Redis(host='localhost', port=6379)
 store = RedisStore(redis)
 
 def save_image(user_id, file):
-     dir = os.getcwd() + '/testsets/' + user_id + '/'
-     os.mkdir(dir)
-     file_path = dir + file.name
+     directory = os.getcwd() + '/testsets/' + user_id + '/'
+     if not os.path.exists(directory):
+        os.makedirs(directory)
+     file_path = directory + file.filename
      file.save(file_path, buffer_size=16384)
      file.close()
 
