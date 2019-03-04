@@ -3,7 +3,7 @@ FROM python:3.6
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-COPY swagger_server/uwsgi.ini /usr/src/app/
+COPY uwsgi.ini /usr/src/app/
 COPY nginx.conf /usr/src/app/
 COPY requirements.txt /usr/src/app/
 COPY start.sh /usr/src/app/
@@ -41,12 +41,10 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY . /usr/src/app
 
-# EXPOSE 8080
-
-# ENTRYPOINT ["python3"]
-
-# CMD ["-m", "swagger_server"]
+EXPOSE 80
 
 COPY nginx.conf /etc/nginx
+
 RUN chmod +x ./start.sh
+
 CMD ["./start.sh"]
