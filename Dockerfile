@@ -1,8 +1,16 @@
 FROM python:3.6
-ADD . /code
-WORKDIR /code
+
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+COPY uwsgi.ini /usr/src/app/
+COPY nginx.conf /usr/src/app/
+COPY requirements.txt /usr/src/app/
+COPY start.sh /usr/src/app/
+
 RUN apt-get -y update
 RUN apt-get install -y --fix-missing \
+    nginx \
     build-essential \
     cmake \
     gfortran \
@@ -29,6 +37,14 @@ RUN cd ~ && \
     git clone -b 'v19.9' --single-branch https://github.com/davisking/dlib.git dlib/ && \
     cd  dlib/ && \
     python3 setup.py install --yes USE_AVX_INSTRUCTIONS
-RUN pip install -r requirements.txt
-RUN pip install -e .
-CMD ["python", "vl/app.py"]
+RUN pip3 install --no-cache-dir -r requirements.txt
+
+COPY . /usr/src/app
+
+EXPOSE 80
+
+COPY nginx.conf /etc/nginx
+
+RUN chmod +x ./start.sh
+
+CMD ["./start.sh"]

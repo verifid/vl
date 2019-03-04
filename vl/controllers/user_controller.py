@@ -5,11 +5,12 @@ import uuid
 import asyncio
 import json
 
-from swagger_server.store.redis_store import RedisStore
-from swagger_server.models.user import User
-from swagger_server import util
-from swagger_server.models.api_response import ApiResponse
-from swagger_server.models.user_data_response import UserDataResponse
+import vl.util
+
+from vl.store.redis_store import RedisStore
+from vl.models.user import User
+from vl.models.api_response import ApiResponse
+from vl.models.user_data_response import UserDataResponse
 from redis import Redis
 from facereg import google_images
 

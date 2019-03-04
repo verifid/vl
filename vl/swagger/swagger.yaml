@@ -44,7 +44,7 @@ paths:
           description: "Invalid request."
           schema:
             $ref: "#/definitions/ApiResponse"
-      x-swagger-router-controller: "swagger_server.controllers.user_controller"
+      x-swagger-router-controller: "controllers.user_controller"
   /image/upload:
     post:
       tags:
@@ -80,7 +80,7 @@ paths:
           description: "Failed operation, no user id found on request."
           schema:
             $ref: "#/definitions/ApiResponse"
-      x-swagger-router-controller: "swagger_server.controllers.image_controller"
+      x-swagger-router-controller: "controllers.image_controller"
 definitions:
   User:
     type: "object"

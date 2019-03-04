@@ -2,9 +2,9 @@ import os
 import connexion
 import six
 
-from swagger_server.models.api_response import ApiResponse
-from swagger_server import util
-from swagger_server.store.redis_store import RedisStore
+import vl.util
+from vl.models.api_response import ApiResponse
+from vl.store.redis_store import RedisStore
 from redis import Redis
 from enum import Enum
 

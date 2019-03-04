@@ -4,7 +4,7 @@
 import unittest
 import fakeredis
 
-from swagger_server.store.redis_store import RedisStore
+from vl.store.redis_store import RedisStore
 
 class RedisStoreTest(unittest.TestCase):
 
