@@ -6,8 +6,7 @@ from flask import json
 from six import BytesIO
 
 from vl.models.api_response import ApiResponse  # noqa: E501
-from test import BaseTestCase
-
+from . import BaseTestCase
 
 class TestImageController(BaseTestCase):
     """ImageController integration test stubs"""

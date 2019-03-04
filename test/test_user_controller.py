@@ -6,8 +6,7 @@ from flask import json
 from six import BytesIO
 
 from vl.models.user import User  # noqa: E501
-from test import BaseTestCase
-
+from . import BaseTestCase
 
 class TestUserController(BaseTestCase):
     """UserController integration test stubs"""
