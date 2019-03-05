@@ -44,7 +44,7 @@ def main():
     app.app.json_encoder = JSONEncoder
     app.add_api('swagger.yaml', arguments={'title': 'Identity Verification Layer'})
     app.wsgi_app = ReverseProxied(app.wsgi_app)
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=8080)
 
 if __name__ == '__main__':
     main()
