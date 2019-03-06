@@ -45,13 +45,13 @@ paths:
           schema:
             $ref: "#/definitions/ApiResponse"
       x-swagger-router-controller: "vl.controllers.user_controller"
-  /image/upload:
+  /image/uploadProfile:
     post:
       tags:
       - "image"
-      summary: "Uploads an image"
+      summary: "Uploads a profile image."
       description: ""
-      operationId: "upload_image"
+      operationId: "upload_profile"
       consumes:
       - "multipart/form-data"
       produces:
@@ -59,12 +59,48 @@ paths:
       parameters:
       - name: "userId"
         in: "formData"
-        description: "ID of user to update"
+        description: "ID of user to update."
         required: true
         type: "string"
       - name: "file"
         in: "formData"
-        description: "Image file to upload."
+        description: "Profile picture to upload."
+        required: true
+        type: "file"
+      responses:
+        200:
+          description: "Successful operation."
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        204:
+          description: "Failed operation, no user found with given id."
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        400:
+          description: "Failed operation, no user id found on request."
+          schema:
+            $ref: "#/definitions/ApiResponse"
+      x-swagger-router-controller: "vl.controllers.image_controller"
+  /image/uploadIdentity:
+    post:
+      tags:
+      - "image"
+      summary: "Uploads an identity card image."
+      description: ""
+      operationId: "upload_identity"
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "userId"
+        in: "formData"
+        description: "ID of user to update."
+        required: true
+        type: "string"
+      - name: "file"
+        in: "formData"
+        description: "Identity picture to upload."
         required: true
         type: "file"
       responses:
@@ -135,6 +171,6 @@ definitions:
       type: "type"
       message: "message"
       userId: "userId"
-externalDocs:
-  description: "Find out more about Swagger"
-  url: "http://swagger.io"
+# externalDocs:
+#   description: "Find out more about Swagger"
+#   url: "http://swagger.io"
