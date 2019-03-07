@@ -42,6 +42,10 @@ def upload_identity(userId, file):
         api_response = ApiResponse.from_dict({'code': 412, 'type': 'error',
                                         'message': 'No file found on request.'})
         return api_response.to_str()
+    if store.value_of(userId) is None:
+        api_response = ApiResponse.from_dict({'code': 204, 'type': 'error',
+                                        'message': 'No user found with given user id.'})
+        return api_response.to_str()
     save_image(userId, file, identity=True)
     api_response = ApiResponse.from_dict({'code': 200, 'type': 'success',
                                         'message': 'Image file received.'})
@@ -65,6 +69,10 @@ def upload_profile(userId, file):
     if not file:
         api_response = ApiResponse.from_dict({'code': 412, 'type': 'error',
                                         'message': 'No file found on request.'})
+        return api_response.to_str()
+    if store.value_of(userId) is None:
+        api_response = ApiResponse.from_dict({'code': 204, 'type': 'error',
+                                        'message': 'No user found with given user id.'})
         return api_response.to_str()
     save_image(userId, file, identity=False)
     api_response = ApiResponse.from_dict({'code': 200, 'type': 'success',
