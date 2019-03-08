@@ -4,12 +4,7 @@ import six
 
 import vl.util
 from vl.models.api_response import ApiResponse
-from vl.store.redis_store import RedisStore
-from redis import Redis
-from enum import Enum
-
-redis = Redis(host='localhost', port=6379)
-store = RedisStore(redis)
+from vl import store
 
 def save_image(user_id, file, identity):
     if identity:

@@ -7,15 +7,13 @@ import json
 
 import vl.util
 
-from vl.store.redis_store import RedisStore
 from vl.models.user import User
 from vl.models.api_response import ApiResponse
 from vl.models.user_data_response import UserDataResponse
-from redis import Redis
+from vl import store
 from facereg import google_images
 
-redis = Redis(host='localhost', port=6379)
-store = RedisStore(redis)
+
 loop = asyncio.get_event_loop()
 
 json_model = ['country', 'dateOfBirth', 'gender', 
