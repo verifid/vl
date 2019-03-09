@@ -11,6 +11,7 @@ COPY start.sh /usr/src/app/
 RUN apt-get -y update
 RUN apt-get install -y --fix-missing \
     nginx \
+    redis-server \
     build-essential \
     cmake \
     gfortran \
