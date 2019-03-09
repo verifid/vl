@@ -9,8 +9,22 @@ from redis import (
 class RedisStore(object):
     """Class used to store user datas with unique ids."""
 
+    class __RedisStore:
+        def __init__(self, redis):
+            self._redis = redis
+        def __str__(self):
+            return repr(self) + self._redis
+
+    instance = None
+ 
     def __init__(self, redis):
-        self._redis = redis
+        if not RedisStore.instance:
+            RedisStore.instance = RedisStore.__RedisStore(redis)
+        else:
+            RedisStore.instance._redis = redis
+
+    def __getattr__(self, name):
+        return getattr(self.instance, name)
 
     def keep(self, key, value):
         try:
