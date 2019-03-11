@@ -14,6 +14,8 @@ RUN apt-get install -y --fix-missing \
     redis-server \
     build-essential \
     cmake \
+    tesseract-ocr \
+    libtesseract-dev \
     gfortran \
     git \
     wget \
