@@ -45,6 +45,34 @@ paths:
           schema:
             $ref: "#/definitions/ApiResponse"
       x-swagger-router-controller: "vl.controllers.user_controller"
+  /user/verify:
+    post:
+      tags:
+      - "user"
+      summary: "Verifies user."
+      description: ""
+      operationId: "verify"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "User id that required for verification."
+        required: true
+        schema:
+          $ref: "#/definitions/UserId"
+      responses:
+        200:
+          description: "User not verified."
+          schema:
+            $ref: "#/definitions/UserVerificationResponse"
+        400:
+          description: "Invalid request."
+          schema:
+            $ref: "#/definitions/ApiResponse"
+      x-swagger-router-controller: "vl.controllers.user_controller"
   /image/uploadProfile:
     post:
       tags:
@@ -140,6 +168,13 @@ definitions:
       surname: "surname"
       name: "name"
       dateOfBirth: "dateOfBirth"
+  UserId:
+    type: "object"
+    properties:
+      userId:
+        type: "string"
+    example:
+      userId: "userId"
   ApiResponse:
     type: "object"
     properties:
@@ -169,6 +204,23 @@ definitions:
     example:
       code: 0
       type: "type"
+      message: "message"
+      userId: "userId"
+  UserVerificationResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      isVerifed:
+        type: "boolean"
+      message:
+        type: "string"
+      userId:
+        type: "string"
+    example:
+      code: 0
+      isVerifed: true
       message: "message"
       userId: "userId"
 # externalDocs:

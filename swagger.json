@@ -66,6 +66,53 @@
         }
       }
     },
+    "/user/verify": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Verifies user.",
+        "description": "",
+        "operationId": "verify",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User id that required for verification.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User verified successfully.",
+            "schema": {
+              "$ref": "#/definitions/UserVerificationResponse"
+            }
+          },
+          "200": {
+            "description": "User not verified.",
+            "schema": {
+              "$ref": "#/definitions/UserVerificationResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        }
+      }
+    },
     "/image/uploadProfile": {
       "post": {
         "tags": [
@@ -195,6 +242,14 @@
         }
       }
     },
+    "UserId": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        }
+      }
+    },
     "ApiResponse": {
       "type": "object",
       "properties": {
@@ -219,6 +274,24 @@
         },
         "type": {
           "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        }
+      }
+    },
+    "UserVerificationResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "isVerifed": {
+          "type": "boolean"
         },
         "message": {
           "type": "string"

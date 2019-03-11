@@ -10,9 +10,9 @@ import vl.util
 from vl.models.user import User
 from vl.models.api_response import ApiResponse
 from vl.models.user_data_response import UserDataResponse
+from vl.models.user_id import UserId
 from vl import store
 from facereg import google_images
-
 
 loop = asyncio.get_event_loop()
 
@@ -62,3 +62,15 @@ def send_data(body):
         response = ApiResponse.from_dict({'code': 400, 'type': 'error',
                                         'message': 'Request needs a user json object.'})
         return response.to_str()
+
+def verify(body):
+    """Verifies user.
+
+    :param body: User id that required for verification.
+    :type body: dict | bytes
+
+    :rtype: UserVerificationResponse
+    """
+    if connexion.request.is_json:
+        body = UserId.from_dict(connexion.request.get_json())
+    return 'do some magic!'

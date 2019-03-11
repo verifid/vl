@@ -6,3 +6,4 @@ from __future__ import absolute_import
 from .api_response import ApiResponse
 from .user import User
 from .user_data_response import UserDataResponse
+from .user_id import UserId

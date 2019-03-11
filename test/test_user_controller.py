@@ -5,7 +5,8 @@ from __future__ import absolute_import
 from flask import json
 from six import BytesIO
 
-from vl.models.user import User  # noqa: E501
+from vl.models.user import User
+from vl.models.user_id import UserId
 from . import BaseTestCase
 
 class TestUserController(BaseTestCase):
@@ -62,6 +63,21 @@ class TestUserController(BaseTestCase):
             data=json.dumps(body),
             content_type='application/json')
         self.assert400(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+    def test_verify(self):
+        """Test case for verify
+
+        Verifies user.
+        """
+
+        body = UserId()
+        response = self.client.open(
+            '/v1/user/verify',
+            method='POST',
+            data=json.dumps(body),
+            content_type='application/json')
+        self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
 if __name__ == '__main__':
