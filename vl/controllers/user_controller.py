@@ -74,6 +74,6 @@ def verify(body):
 
     if connexion.request.is_json:
         body = UserId.from_dict(connexion.request.get_json())
-        user_id = body['userId']
+        user_id = body.user_id
         user = store.value_of(user_id)
     return 'do some magic!'

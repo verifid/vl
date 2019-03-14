@@ -72,6 +72,7 @@ class TestUserController(BaseTestCase):
         """
 
         body = UserId()
+        body.user_id = 'userId'
         response = self.client.open(
             '/v1/user/verify',
             method='POST',
