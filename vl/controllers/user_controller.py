@@ -49,7 +49,7 @@ def send_data(body):
         if validate_json(json_body) == False:
             response = ApiResponse.from_dict({'code': 400, 'type': 'error',
                                         'message': 'Request has missing values.'})
-            return response.to_str()
+            return json.dumps(response.to_dict())
         else:
             u_id = user_id()
             loop.run_until_complete(download_images(json_body['name'], json_body['surname'], u_id))
@@ -57,11 +57,11 @@ def send_data(body):
             response = UserDataResponse.from_dict({'code': 200, 'type': 'success', 
                                         'message': 'User created with received values.',
                                         'userId': u_id})
-            return response.to_str()
+            return json.dumps(response.to_dict())
     else:
         response = ApiResponse.from_dict({'code': 400, 'type': 'error',
                                         'message': 'Request needs a user json object.'})
-        return response.to_str()
+        return json.dumps(response.to_dict())
 
 def verify(body):
     """Verifies user.
