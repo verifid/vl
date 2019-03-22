@@ -30,22 +30,12 @@ def upload_identity(userId, file):
     :rtype: ApiResponse
     """
 
-    if not userId:
-        api_response = ApiResponse.from_dict({'code': 400, 'type': 'error',
-                                        'message': 'No user id found on request.'})
-        return json.dumps(api_response.to_dict())
-    if not file:
-        api_response = ApiResponse.from_dict({'code': 412, 'type': 'error',
-                                        'message': 'No file found on request.'})
-        return json.dumps(api_response.to_dict())
     if store.value_of(userId) is None:
-        api_response = ApiResponse.from_dict({'code': 204, 'type': 'error',
-                                        'message': 'No user found with given user id.'})
-        return json.dumps(api_response.to_dict())
+        return {'code': 204, 'type': 'error',
+                'message': 'No user found with given user id.'}
     save_image(userId, file, identity=True)
-    api_response = ApiResponse.from_dict({'code': 200, 'type': 'success',
-                                        'message': 'Image file received.'})
-    return json.dumps(api_response.to_dict())
+    return {'code': 200, 'type': 'success',
+            'message': 'Image file received.'}
 
 def upload_profile(userId, file):
     """Uploads a profile image.
@@ -58,19 +48,9 @@ def upload_profile(userId, file):
     :rtype: ApiResponse
     """
 
-    if not userId:
-        api_response = ApiResponse.from_dict({'code': 400, 'type': 'error',
-                                        'message': 'No user id found on request.'})
-        return json.dumps(api_response.to_dict())
-    if not file:
-        api_response = ApiResponse.from_dict({'code': 412, 'type': 'error',
-                                        'message': 'No file found on request.'})
-        return json.dumps(api_response.to_dict())
     if store.value_of(userId) is None:
-        api_response = ApiResponse.from_dict({'code': 204, 'type': 'error',
-                                        'message': 'No user found with given user id.'})
-        return json.dumps(api_response.to_dict())
+        return {'code': 204, 'type': 'error',
+                'message': 'No user found with given user id.'}
     save_image(userId, file, identity=False)
-    api_response = ApiResponse.from_dict({'code': 200, 'type': 'success',
-                                        'message': 'Image file received.'})
-    return json.dumps(api_response.to_dict())
+    return {'code': 200, 'type': 'success',
+            'message': 'Image file received.'}
