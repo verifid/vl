@@ -4,6 +4,7 @@ import six
 import json
 
 import vl.util
+from flask import jsonify
 from vl.models.api_response import ApiResponse
 from vl import store
 
@@ -31,11 +32,15 @@ def upload_identity(userId, file):
     """
 
     if store.value_of(userId) is None:
-        return {'code': 204, 'type': 'error',
-                'message': 'No user found with given user id.'}
+        response = jsonify({'code': 204, 'type': 'error',
+                'message': 'No user found with given user id.'})
+        response.status_code = 204
+        return response
     save_image(userId, file, identity=True)
-    return {'code': 200, 'type': 'success',
-            'message': 'Image file received.'}
+    response = jsonify({'code': 200, 'type': 'success',
+            'message': 'Image file received.'})
+    response.status_code = 200
+    return response
 
 def upload_profile(userId, file):
     """Uploads a profile image.
@@ -49,8 +54,12 @@ def upload_profile(userId, file):
     """
 
     if store.value_of(userId) is None:
-        return {'code': 204, 'type': 'error',
-                'message': 'No user found with given user id.'}
+        response = jsonify({'code': 204, 'type': 'error',
+                'message': 'No user found with given user id.'})
+        response.status_code = 204
+        return response
     save_image(userId, file, identity=False)
-    return {'code': 200, 'type': 'success',
-            'message': 'Image file received.'}
+    response = jsonify({'code': 200, 'type': 'success',
+            'message': 'Image file received.'})
+    response.status_code = 200
+    return response

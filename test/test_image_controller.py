@@ -2,9 +2,12 @@
 
 from __future__ import absolute_import
 
+import fakeredis
+
 from flask import json
 from six import BytesIO
 
+from vl.store.redis_store import RedisStore
 from vl.models.api_response import ApiResponse  # noqa: E501
 from . import BaseTestCase
 
@@ -17,7 +20,10 @@ class TestImageController(BaseTestCase):
         Uploads an identity image.
         """
 
-        data = dict(userId='userId_example',
+        redis = fakeredis.FakeStrictRedis()
+        store = RedisStore(redis)
+        store.keep('userId', 'user')
+        data = dict(userId='userId',
                     file=(BytesIO(b'some file data'), 'test.png'))
         response = self.client.open(
             '/v1/image/uploadIdentity',
@@ -49,6 +55,9 @@ class TestImageController(BaseTestCase):
         Uploads a profile image.
         """
 
+        redis = fakeredis.FakeStrictRedis()
+        store = RedisStore(redis)
+        store.keep('userId', 'user')
         data = dict(userId='userId_example',
                     file=(BytesIO(b'some file data'), 'test.png'))
         response = self.client.open(
