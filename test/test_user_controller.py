@@ -65,7 +65,7 @@ class TestUserController(BaseTestCase):
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
-    def test_verify(self):
+    def test_verify_fail_with_invalid_user(self):
         """Test case for verify
 
         Verifies user.
@@ -78,7 +78,7 @@ class TestUserController(BaseTestCase):
             method='POST',
             data=json.dumps(body),
             content_type='application/json')
-        self.assert200(response,
+        self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
 if __name__ == '__main__':

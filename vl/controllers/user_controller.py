@@ -7,6 +7,7 @@ import json
 
 import vl.util
 
+from flask import jsonify
 from vl.models.user import User
 from vl.models.api_response import ApiResponse
 from vl.models.user_data_response import UserDataResponse
@@ -73,4 +74,9 @@ def verify(body):
         body = UserId.from_dict(connexion.request.get_json())
         user_id = body.user_id
         user = store.value_of(user_id)
+        if user == None:
+            response = jsonify({'code': 400, 'type': 'error',
+                'message': 'Invalid user id.'})
+            response.status_code = 400
+            return response
     return 'do some magic!'
