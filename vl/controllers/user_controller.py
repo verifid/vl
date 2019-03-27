@@ -48,18 +48,24 @@ def send_data(body):
     if connexion.request.is_json:
         json_body = connexion.request.get_json()
         if validate_json(json_body) == False:
-            return {'code': 400, 'type': 'error',
-                    'message': 'Request has missing values.'}
+            response = jsonify({'code': 400, 'type': 'error',
+                    'message': 'Request has missing values.'})
+            response.status_code = 400
+            return response
         else:
             u_id = user_id()
             loop.run_until_complete(download_images(json_body['name'], json_body['surname'], u_id))
             store.keep(u_id, json.dumps(json_body))
-            return {'code': 200, 'type': 'success', 
+            response = jsonify({'code': 200, 'type': 'success', 
                     'message': 'User created with received values.',
-                    'userId': u_id}
+                    'userId': u_id})
+            response.status_code = 200
+            return response
     else:
-        return {'code': 400, 'type': 'error',
-                'message': 'Request needs a user json object.'}
+        response = jsonify({'code': 400, 'type': 'error',
+                'message': 'Request needs a user json object.'})
+        response.status_code = 400
+        return response
 
 def verify(body):
     """Verifies user.
