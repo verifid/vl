@@ -58,7 +58,7 @@ class TestImageController(BaseTestCase):
         redis = fakeredis.FakeStrictRedis()
         store = RedisStore(redis)
         store.keep('userId', 'user')
-        data = dict(userId='userId_example',
+        data = dict(userId='userId',
                     file=(BytesIO(b'some file data'), 'test.png'))
         response = self.client.open(
             '/v1/image/uploadProfile',
