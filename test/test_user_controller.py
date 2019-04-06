@@ -2,9 +2,12 @@
 
 from __future__ import absolute_import
 
+import fakeredis
+
 from flask import json
 from six import BytesIO
 
+from vl.store.redis_store import RedisStore
 from vl.models.user import User
 from vl.models.user_id import UserId
 from . import BaseTestCase
@@ -79,6 +82,25 @@ class TestUserController(BaseTestCase):
             data=json.dumps(body),
             content_type='application/json')
         self.assert400(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+    def test_verify_success_with_valid_user(self):
+        """Test case for verify
+
+        Verifies user.
+        """
+
+        body = UserId()
+        body.user_id = 'userId'
+        redis = fakeredis.FakeStrictRedis()
+        store = RedisStore(redis)
+        store.keep('userId', 'user')
+        response = self.client.open(
+            '/v1/user/verify',
+            method='POST',
+            data=json.dumps(body),
+            content_type='application/json')
+        self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
 if __name__ == '__main__':
