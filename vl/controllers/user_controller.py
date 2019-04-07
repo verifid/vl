@@ -85,10 +85,10 @@ def verify(body):
                 'message': 'Invalid user id.'})
             response.status_code = 400
             return response
-        directory = os.getcwd() + '/testsets/' + 'identity' +  user_id + '/'
+        directory = os.getcwd() + '/testsets/' + 'identity' + '/' + user_id + '/'
         files = os.listdir(directory)
         print(files)
-    response = jsonify({'code': 200, 'type': 'success',
-                        'message': 'Given user has verified!'})
-    response.status_code = 200
-    return response
+        response = jsonify({'code': 200, 'type': 'success',
+                                'message': 'Given user has verified!'})
+        response.status_code = 200
+        return response

@@ -2,6 +2,7 @@
 
 from __future__ import absolute_import
 
+import os
 import fakeredis
 
 from flask import json
@@ -11,6 +12,8 @@ from vl.store.redis_store import RedisStore
 from vl.models.user import User
 from vl.models.user_id import UserId
 from . import BaseTestCase
+
+from PIL import Image
 
 class TestUserController(BaseTestCase):
     """UserController integration test stubs"""
@@ -90,11 +93,19 @@ class TestUserController(BaseTestCase):
         Verifies user.
         """
 
+        user_id = 'userId'
+        directory = os.getcwd() + '/testsets/' + 'identity' + '/' + user_id + '/'
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        img = Image.new('RGB', (200, 200))
+        img_path = directory + 'image.png'
+        img.save(img_path, 'PNG')
+
         body = UserId()
-        body.user_id = 'userId'
+        body.user_id = user_id
         redis = fakeredis.FakeStrictRedis()
         store = RedisStore(redis)
-        store.keep('userId', 'user')
+        store.keep(user_id, 'user')
         response = self.client.open(
             '/v1/user/verify',
             method='POST',
