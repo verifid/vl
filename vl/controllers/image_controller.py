@@ -16,7 +16,8 @@ def save_image(user_id, file, identity):
     directory = os.getcwd() + '/testsets/' + path +  user_id + '/'
     if not os.path.exists(directory):
         os.makedirs(directory)
-    file_path = directory + file.filename
+    _, file_extension = os.path.splitext(file.filename)
+    file_path = directory + 'image' + file_extension
     file.save(file_path, buffer_size=16384)
     file.close()
 
