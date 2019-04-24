@@ -14,6 +14,7 @@ from vl.models.user_data_response import UserDataResponse
 from vl.models.user_id import UserId
 from vl import store
 from facereg import google_images
+from mocr import TextRecognizer
 
 loop = asyncio.get_event_loop()
 
@@ -85,9 +86,9 @@ def verify(body):
                 'message': 'Invalid user id.'})
             response.status_code = 400
             return response
-        directory = os.getcwd() + '/testsets/' + 'identity' + '/' + user_id + '/'
-        files = os.listdir(directory)
-        print(files)
+        image_path = os.getcwd() + '/testsets/' + 'identity' + '/' + user_id + '/' + 'image.png'
+        east_path = os.getcwd() + '/vl' + '/' + 'model/frozen_east_text_detection.pb'
+        text_recognizer = TextRecognizer(image_path, east_path)
         response = jsonify({'code': 200, 'type': 'success',
                                 'message': 'Given user has verified!'})
         response.status_code = 200
