@@ -2,6 +2,7 @@
 
 from __future__ import absolute_import
 
+import os
 import fakeredis
 
 from flask import json
@@ -23,8 +24,11 @@ class TestImageController(BaseTestCase):
         redis = fakeredis.FakeStrictRedis()
         store = RedisStore(redis)
         store.keep('userId', 'user')
+        image_path = os.path.dirname(os.path.realpath(__file__)) + '/resources/sample_uk_identity_card.png'
+        with open(image_path, 'rb') as f:
+            image_data = BytesIO(f.read())
         data = dict(userId='userId',
-                    file=(BytesIO(b'some file data'), 'test.png'))
+                    file=(image_data, 'image.png'))
         response = self.client.open(
             '/v1/image/uploadIdentity',
             method='POST',
