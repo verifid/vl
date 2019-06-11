@@ -153,21 +153,18 @@ definitions:
         type: "string"
       surname:
         type: "string"
-      gender:
-        type: "string"
       dateOfBirth:
-        type: "string"
-      placeOfBirth:
         type: "string"
       country:
         type: "string"
+      expireDate:
+        type: "string"
     example:
-      country: "country"
-      placeOfBirth: "placeOfBirth"
-      gender: "gender"
-      surname: "surname"
       name: "name"
+      surname: "surname"
       dateOfBirth: "dateOfBirth"
+      country: "country"
+      expireDate: "expireDate"
   UserId:
     type: "object"
     properties:
