@@ -5,6 +5,8 @@ from __future__ import absolute_import
 import os
 import fakeredis
 
+from shutil import copyfile
+
 from flask import json
 from six import BytesIO
 
@@ -94,12 +96,12 @@ class TestUserController(BaseTestCase):
         """
 
         user_id = 'userId'
-        directory = os.getcwd() + '/testsets/' + 'identity' + '/' + user_id + '/'
+        directory = os.getcwd() + '/testsets/' + 'identity' + '/' + user_id + '/' + 'image.png'
         if not os.path.exists(directory):
             os.makedirs(directory)
-        img = Image.new('RGB', (200, 200))
-        img_path = directory + 'image.png'
-        img.save(img_path, 'PNG')
+
+        src_image_path = os.path.dirname(os.path.realpath(__file__)) + '/resources/sample_uk_identity_card.png'
+        copyfile(src_image_path, directory)
 
         body = UserId()
         body.user_id = user_id

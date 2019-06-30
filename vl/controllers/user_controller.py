@@ -68,6 +68,23 @@ def send_data(body):
         response.status_code = 400
         return response
 
+def get_texts(user_id):
+    image_path = os.getcwd() + '/testsets/' + 'identity' + '/' + user_id + '/' + 'image.png'
+    east_path = os.getcwd() + '/vl' + '/' + 'model/frozen_east_text_detection.pb'
+    text_recognizer = TextRecognizer(image_path, east_path)
+    (image, _, _) = text_recognizer.load_image()
+    (resized_image, ratio_height, ratio_width, _, _) = text_recognizer.resize_image(image, 320, 320)
+    (scores, geometry) = text_recognizer.geometry_score(east_path, resized_image)
+    boxes = text_recognizer.boxes(scores, geometry)
+    results = text_recognizer.get_results(boxes, image, ratio_height, ratio_width)
+    if results:
+        texts = ''
+        for text_bounding_box in results:
+            text = text_bounding_box[1]
+            texts += text + ' '
+        return texts
+    return ''
+
 def verify(body):
     """Verifies user.
 
@@ -86,15 +103,8 @@ def verify(body):
                 'message': 'Invalid user id.'})
             response.status_code = 400
             return response
-        image_path = os.getcwd() + '/testsets/' + 'identity' + '/' + user_id + '/' + 'image.png'
-        east_path = os.getcwd() + '/vl' + '/' + 'model/frozen_east_text_detection.pb'
-        text_recognizer = TextRecognizer(image_path, east_path)
-        (image, _, _) = text_recognizer.load_image()
-        (resized_image, ratio_height, ratio_width, _, _) = text_recognizer.resize_image(image, 320, 320)
-        (scores, geometry) = text_recognizer.geometry_score(east_path, resized_image)
-        boxes = text_recognizer.boxes(scores, geometry)
-        results = text_recognizer.get_results(boxes, image, ratio_height, ratio_width)
-        print(results)
+        texts = get_texts(user_id)
+        print(texts)
         response = jsonify({'code': 200, 'type': 'success',
                                 'message': 'Given user has verified!'})
         response.status_code = 200
