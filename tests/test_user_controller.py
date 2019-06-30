@@ -5,17 +5,13 @@ from __future__ import absolute_import
 import os
 import fakeredis
 
-from shutil import copyfile
+from shutil import copy2
 
 from flask import json
-from six import BytesIO
 
 from vl.store.redis_store import RedisStore
-from vl.models.user import User
 from vl.models.user_id import UserId
 from . import BaseTestCase
-
-from PIL import Image
 
 class TestUserController(BaseTestCase):
     """UserController integration test stubs"""
@@ -96,12 +92,13 @@ class TestUserController(BaseTestCase):
         """
 
         user_id = 'userId'
-        directory = os.getcwd() + '/testsets/' + 'identity' + '/' + user_id + '/' + 'image.png'
+        directory = os.getcwd() + '/testsets/' + 'identity' + '/' + user_id + '/'
         if not os.path.exists(directory):
             os.makedirs(directory)
 
         src_image_path = os.path.dirname(os.path.realpath(__file__)) + '/resources/sample_uk_identity_card.png'
-        copyfile(src_image_path, directory)
+        copy2(src_image_path, directory)
+        os.rename(directory + '/sample_uk_identity_card.png', directory + 'image.png')
 
         body = UserId()
         body.user_id = user_id
