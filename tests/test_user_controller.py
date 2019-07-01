@@ -102,6 +102,7 @@ class TestUserController(BaseTestCase):
 
         body = UserId()
         body.user_id = user_id
+        body.language = 'en_core_web_sm'
         redis = fakeredis.FakeStrictRedis()
         store = RedisStore(redis)
         store.keep(user_id, 'user')

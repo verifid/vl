@@ -1,20 +1,16 @@
 import os
 import connexion
-import six
 import uuid
 import asyncio
 import json
 
-import vl.util
 
 from flask import jsonify
-from vl.models.user import User
-from vl.models.api_response import ApiResponse
-from vl.models.user_data_response import UserDataResponse
 from vl.models.user_id import UserId
 from vl import store
 from facereg import google_images
 from mocr import TextRecognizer
+from nerd import ner
 
 loop = asyncio.get_event_loop()
 
@@ -88,7 +84,7 @@ def get_texts(user_id):
 def verify(body):
     """Verifies user.
 
-    :param body: User id that required for verification.
+    :param body: User id and language that required for verification.
     :type body: dict | bytes
 
     :rtype: UserVerificationResponse
@@ -104,7 +100,14 @@ def verify(body):
             response.status_code = 400
             return response
         texts = get_texts(user_id)
-        print(texts)
+        if not texts:
+            response = jsonify({'code': 400, 'type': 'error',
+                                'message': 'Can not recognize characters from identity card.'})
+            response.status_code = 400
+            return response
+        language = body.language
+        ents = ner.name(texts, language=language)
+        print(ents)
         response = jsonify({'code': 200, 'type': 'success',
                                 'message': 'Given user has verified!'})
         response.status_code = 200
