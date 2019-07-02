@@ -16,6 +16,7 @@ loop = asyncio.get_event_loop()
 
 json_model = ['country', 'dateOfBirth', 'gender', 
             'name', 'placeOfBirth', 'surname']
+entity_tags = ['PERSON', 'DATE', 'GPE', 'NORP']
 
 def validate_json(json_object):
     if set(json_object.keys()) != set(json_model):
