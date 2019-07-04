@@ -7,6 +7,7 @@ import json
 
 from flask import jsonify
 from vl.models.user_id import UserId
+from vl.models.user import User
 from vl import store
 from facereg import google_images
 from mocr import TextRecognizer
@@ -16,7 +17,7 @@ loop = asyncio.get_event_loop()
 
 json_model = ['country', 'dateOfBirth', 'gender', 
             'name', 'placeOfBirth', 'surname']
-entity_tags = ['PERSON', 'DATE', 'GPE', 'NORP']
+entity_tags = {'PERSON': 'name', 'DATE': 'date', 'GPE': 'nationality', 'NORP': 'city'}
 
 def validate_json(json_object):
     if set(json_object.keys()) != set(json_model):
@@ -82,6 +83,11 @@ def get_texts(user_id):
         return texts
     return ''
 
+def get_doc(texts, language):
+    doc = ner.name(texts, language=language)
+    text_label = [(X.text, X.label_) for X in doc]
+    return text_label
+
 def verify(body):
     """Verifies user.
 
@@ -94,12 +100,13 @@ def verify(body):
     if connexion.request.is_json:
         body = UserId.from_dict(connexion.request.get_json())
         user_id = body.user_id
-        user = store.value_of(user_id)
-        if user == None:
+        user_json = store.value_of(user_id)
+        if user_json == None:
             response = jsonify({'code': 400, 'type': 'error',
                 'message': 'Invalid user id.'})
             response.status_code = 400
             return response
+        user = json.loads(user_json)
         texts = get_texts(user_id)
         if not texts:
             response = jsonify({'code': 400, 'type': 'error',
@@ -107,8 +114,8 @@ def verify(body):
             response.status_code = 400
             return response
         language = body.language
-        ents = ner.name(texts, language=language)
-        print(ents)
+        doc = get_doc(texts, language=language)
+        print(doc)
         response = jsonify({'code': 200, 'type': 'success',
                                 'message': 'Given user has verified!'})
         response.status_code = 200

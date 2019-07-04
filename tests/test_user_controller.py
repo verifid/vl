@@ -11,6 +11,7 @@ from flask import json
 
 from vl.store.redis_store import RedisStore
 from vl.models.user_id import UserId
+from vl.models.user import User
 from . import BaseTestCase
 
 class TestUserController(BaseTestCase):
@@ -105,7 +106,8 @@ class TestUserController(BaseTestCase):
         body.language = 'en_core_web_sm'
         redis = fakeredis.FakeStrictRedis()
         store = RedisStore(redis)
-        store.keep(user_id, 'user')
+        user = self.create_user()
+        store.keep(user_id, json.dumps(user))
         response = self.client.open(
             '/v1/user/verify',
             method='POST',
@@ -113,6 +115,16 @@ class TestUserController(BaseTestCase):
             content_type='application/json')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
+
+    def create_user(self):
+        user = User()
+        user.name = 'name'
+        user.surname = 'surname'
+        user.country = 'country'
+        user.gender = 'gender'
+        user.date_of_birth = '19.02.2000'
+        user.place_of_birth = 'city'
+        return user
 
 if __name__ == '__main__':
     import unittest
