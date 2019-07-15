@@ -118,12 +118,10 @@ class TestUserController(BaseTestCase):
 
     def create_user(self):
         user = User()
-        user.name = 'name'
-        user.surname = 'surname'
-        user.country = 'country'
-        user.gender = 'gender'
-        user.date_of_birth = '19.02.2000'
-        user.place_of_birth = 'city'
+        user.name = 'Elizabeth'
+        user.surname = 'Green'
+        user.country = 'United Kingdom'
+        user.date_of_birth = '14.04.1977'
         return user
 
 if __name__ == '__main__':

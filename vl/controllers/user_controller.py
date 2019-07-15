@@ -4,7 +4,7 @@ import uuid
 import asyncio
 import json
 
-
+from re import search
 from flask import jsonify
 from vl.models.user_id import UserId
 from vl.models.user import User
@@ -88,6 +88,38 @@ def get_doc(texts, language):
     text_label = [(X.text, X.label_) for X in doc]
     return text_label
 
+def create_user_text_label(user):
+    user_text_label = {'PERSON': [user.name, user.surname],
+                       'DATE': user.date_of_birth,
+                       'GPE': user.country}
+    return user_text_label
+
+def point_on_texts(text, value):
+    val_len = len(value)
+    text_len = len(text)
+    if text_len > val_len:
+        match = search(value, text)
+    else:
+        match = search(text, value)
+    point = 0
+    if match:
+        (start, end) = match.span()
+        point = int(((100 * (end - start)) / val_len) / 4)
+    return point
+
+def validate_text_label(text_label, user_text_label):
+    result = 0
+    for (text, label) in text_label:
+        if label in user_text_label:
+            value = user_text_label[label]
+            # check for name and surname
+            if isinstance(value, list):
+                for val in value:
+                    result += point_on_texts(text, val)
+            else:
+                result += point_on_texts(text, value)
+    return result
+
 def verify(body):
     """Verifies user.
 
@@ -106,7 +138,8 @@ def verify(body):
                 'message': 'Invalid user id.'})
             response.status_code = 400
             return response
-        user = json.loads(user_json)
+        user_dict = json.loads(user_json)
+        user = User.from_dict(user_dict)
         texts = get_texts(user_id)
         if not texts:
             response = jsonify({'code': 400, 'type': 'error',
@@ -114,8 +147,10 @@ def verify(body):
             response.status_code = 400
             return response
         language = body.language
-        doc = get_doc(texts, language=language)
-        print(doc)
+        doc_text_label = get_doc(texts, language=language)
+        user_text_label = create_user_text_label(user)
+        text_validation_point = validate_text_label(doc_text_label, user_text_label)
+        print(text_validation_point)
         response = jsonify({'code': 200, 'type': 'success',
                                 'message': 'Given user has verified!'})
         response.status_code = 200
