@@ -21,38 +21,28 @@ class User(Model):
         :type name: str
         :param surname: The surname of this User.  # noqa: E501
         :type surname: str
-        :param gender: The gender of this User.  # noqa: E501
-        :type gender: str
         :param date_of_birth: The date_of_birth of this User.  # noqa: E501
         :type date_of_birth: str
-        :param place_of_birth: The place_of_birth of this User.  # noqa: E501
-        :type place_of_birth: str
         :param country: The country of this User.  # noqa: E501
         :type country: str
         """
         self.swagger_types = {
             'name': str,
             'surname': str,
-            'gender': str,
             'date_of_birth': str,
-            'place_of_birth': str,
             'country': str
         }
 
         self.attribute_map = {
             'name': 'name',
             'surname': 'surname',
-            'gender': 'gender',
             'date_of_birth': 'dateOfBirth',
-            'place_of_birth': 'placeOfBirth',
             'country': 'country'
         }
 
         self._name = name
         self._surname = surname
-        self._gender = gender
         self._date_of_birth = date_of_birth
-        self._place_of_birth = place_of_birth
         self._country = country
 
     @classmethod
@@ -109,27 +99,6 @@ class User(Model):
         self._surname = surname
 
     @property
-    def gender(self) -> str:
-        """Gets the gender of this User.
-
-
-        :return: The gender of this User.
-        :rtype: str
-        """
-        return self._gender
-
-    @gender.setter
-    def gender(self, gender: str):
-        """Sets the gender of this User.
-
-
-        :param gender: The gender of this User.
-        :type gender: str
-        """
-
-        self._gender = gender
-
-    @property
     def date_of_birth(self) -> str:
         """Gets the date_of_birth of this User.
 
@@ -149,27 +118,6 @@ class User(Model):
         """
 
         self._date_of_birth = date_of_birth
-
-    @property
-    def place_of_birth(self) -> str:
-        """Gets the place_of_birth of this User.
-
-
-        :return: The place_of_birth of this User.
-        :rtype: str
-        """
-        return self._place_of_birth
-
-    @place_of_birth.setter
-    def place_of_birth(self, place_of_birth: str):
-        """Sets the place_of_birth of this User.
-
-
-        :param place_of_birth: The place_of_birth of this User.
-        :type place_of_birth: str
-        """
-
-        self._place_of_birth = place_of_birth
 
     @property
     def country(self) -> str:

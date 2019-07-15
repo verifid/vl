@@ -235,13 +235,7 @@
         "surname": {
           "type": "string"
         },
-        "gender": {
-          "type": "string"
-        },
         "dateOfBirth": {
-          "type": "string"
-        },
-        "placeOfBirth": {
           "type": "string"
         },
         "country": {
