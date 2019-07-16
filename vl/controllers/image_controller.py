@@ -1,9 +1,5 @@
 import os
-import connexion
-import six
-import json
 
-import vl.util
 from flask import jsonify
 from vl.models.api_response import ApiResponse
 from vl import store
