@@ -1,8 +1,10 @@
 import os
+import cv2
 
 from flask import jsonify
 from vl.models.api_response import ApiResponse
 from vl import store
+from mocr import face_detection
 
 def save_image(user_id, file, identity):
     if identity:
@@ -16,6 +18,13 @@ def save_image(user_id, file, identity):
     file_path = directory + 'image' + file_extension
     file.save(file_path, buffer_size=16384)
     file.close()
+    # detect face from identity image
+    if identity:
+        face_image = face_detection.detect_face(file_path)
+        face_directory = os.getcwd() + '/testsets/' + 'face/' + user_id + '/'
+        if not os.path.exists(face_directory):
+            os.makedirs(face_directory)
+        cv2.imwrite(face_directory + file.filename, face_image)
 
 def upload_identity(userId, file):
     """Uploads an identity card image.
