@@ -1,9 +1,6 @@
 # coding: utf-8
 
 from __future__ import absolute_import
-from datetime import date, datetime
-
-from typing import List, Dict
 
 from .base_model_ import Model
 from vl import util
@@ -14,36 +11,26 @@ class UserVerificationResponse(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, code: int=None, is_verifed: bool=None, message: str=None, user_id: str=None):  # noqa: E501
+    def __init__(self, code: int=None, verification_rate: int=None):  # noqa: E501
         """UserVerificationResponse - a model defined in Swagger
 
         :param code: The code of this UserVerificationResponse.  # noqa: E501
         :type code: int
-        :param is_verifed: The is_verifed of this UserVerificationResponse.  # noqa: E501
-        :type is_verifed: bool
-        :param message: The message of this UserVerificationResponse.  # noqa: E501
-        :type message: str
-        :param user_id: The user_id of this UserVerificationResponse.  # noqa: E501
-        :type user_id: str
+        :param verification_rate: Verification rate of this UserVerificationResponse.  # noqa: E501
+        :type verification_rate: int
         """
         self.swagger_types = {
             'code': int,
-            'is_verifed': bool,
-            'message': str,
-            'user_id': str
+            'verification_rate': int
         }
 
         self.attribute_map = {
             'code': 'code',
-            'is_verifed': 'isVerifed',
-            'message': 'message',
-            'user_id': 'userId'
+            'verification_rate': 'verificationRate'
         }
 
         self._code = code
-        self._is_verifed = is_verifed
-        self._message = message
-        self._user_id = user_id
+        self._verification_rate = verification_rate
 
     @classmethod
     def from_dict(cls, dikt) -> 'UserVerificationResponse':
@@ -78,64 +65,22 @@ class UserVerificationResponse(Model):
         self._code = code
 
     @property
-    def is_verifed(self) -> bool:
-        """Gets the is_verifed of this UserVerificationResponse.
+    def verification_rate(self) -> int:
+        """Gets the verification_rate of this UserVerificationResponse.
 
 
-        :return: The is_verifed of this UserVerificationResponse.
-        :rtype: bool
+        :return: The verification_rate of this UserVerificationResponse.
+        :rtype: int
         """
-        return self._is_verifed
+        return self._verification_rate
 
-    @is_verifed.setter
-    def is_verifed(self, is_verifed: bool):
-        """Sets the is_verifed of this UserVerificationResponse.
-
-
-        :param is_verifed: The is_verifed of this UserVerificationResponse.
-        :type is_verifed: bool
-        """
-
-        self._is_verifed = is_verifed
-
-    @property
-    def message(self) -> str:
-        """Gets the message of this UserVerificationResponse.
+    @verification_rate.setter
+    def is_verifed(self, verification_rate: int):
+        """Sets the verification_rate of this UserVerificationResponse.
 
 
-        :return: The message of this UserVerificationResponse.
-        :rtype: str
-        """
-        return self._message
-
-    @message.setter
-    def message(self, message: str):
-        """Sets the message of this UserVerificationResponse.
-
-
-        :param message: The message of this UserVerificationResponse.
-        :type message: str
+        :param verification_rate: The verification_rate of this UserVerificationResponse.
+        :type verification_rate: bool
         """
 
-        self._message = message
-
-    @property
-    def user_id(self) -> str:
-        """Gets the user_id of this UserVerificationResponse.
-
-
-        :return: The user_id of this UserVerificationResponse.
-        :rtype: str
-        """
-        return self._user_id
-
-    @user_id.setter
-    def user_id(self, user_id: str):
-        """Sets the user_id of this UserVerificationResponse.
-
-
-        :param user_id: The user_id of this UserVerificationResponse.
-        :type user_id: str
-        """
-
-        self._user_id = user_id
+        self._verification_rate = verification_rate

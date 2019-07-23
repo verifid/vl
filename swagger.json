@@ -291,15 +291,10 @@
           "type": "integer",
           "format": "int32"
         },
-        "isVerifed": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        },
-        "userId": {
-          "type": "string"
-        }
+        "verificationRate": {
+          "type": "integer",
+          "type": "int32"
+        }}
       }
     }
   },

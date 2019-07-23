@@ -173,11 +173,11 @@ def verify(body):
         doc_text_label = get_doc(texts, language=language)
         user_text_label = create_user_text_label(user)
         text_validation_point = validate_text_label(doc_text_label, user_text_label)
-        print(text_validation_point)
+        print('text_validation_point: ' + str(text_validation_point))
         names = recognize_face(user_id)
-        print(names)
         face_validation_point = point_on_recognition(names, user_id)
-        response = jsonify({'code': 200, 'type': 'success',
-                                'message': 'Given user has verified!'})
+        print('face_validation_point: ' + str(face_validation_point))
+        verification_rate = text_validation_point + face_validation_point
+        response = jsonify({'code': 200, 'verificationRate': verification_rate})
         response.status_code = 200
         return response
