@@ -10,6 +10,8 @@ from vl.models.user_id import UserId
 from vl.models.user import User
 from vl import store
 from facereg import google_images
+from facereg import face_encoder
+from facereg import recognize_faces
 from mocr import TextRecognizer
 from nerd import ner
 
@@ -120,6 +122,27 @@ def validate_text_label(text_label, user_text_label):
                 result += point_on_texts(text, value)
     return result
 
+def recognize_face(user_id):
+    datasets_path = os.getcwd() + '/testsets/identity/' + user_id
+    encodings_path = os.path.dirname(os.path.realpath(__file__)) + '/encodings.pickle'
+    face_encoder.encode_faces(datasets=datasets_path, encodings=encodings_path, detection_method='cnn')
+    image_path = os.getcwd() + '/testsets/face/' + user_id + '/' + 'image.png'
+    names = recognize_faces.recognize(image_path, datasets=datasets_path, encodings=encodings_path, detection_method='cnn')
+    return names
+
+def point_on_recognition(names, user_id):
+    point = 0
+    if not names:
+        point = 0
+    if len(names) > 1:
+        for name in names:
+            if name == user_id:
+                point = 25
+    else:
+        if names[0] == user_id:
+            point = 25
+    return point
+
 def verify(body):
     """Verifies user.
 
@@ -151,6 +174,9 @@ def verify(body):
         user_text_label = create_user_text_label(user)
         text_validation_point = validate_text_label(doc_text_label, user_text_label)
         print(text_validation_point)
+        names = recognize_face(user_id)
+        print(names)
+        face_validation_point = point_on_recognition(names, user_id)
         response = jsonify({'code': 200, 'type': 'success',
                                 'message': 'Given user has verified!'})
         response.status_code = 200
