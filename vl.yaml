@@ -1,0 +1,231 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Identity Verification Layer
+  description: Verification Layer of VerifID - open source identity verification platform.
+  license:
+    name: MIT
+    url: https://github.com/verifid/vl/blob/master/LICENSE
+servers:
+  - url: https://api.verifid.app/v1
+paths:
+  /user/sendUserData:
+    post:
+      description: Creates a new user for verification. Duplicates are allowed.
+      operationId: sendUserData
+      requestBody:
+        description: User going to be verified.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User data received successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDataResponse'
+        '400':
+          description: Failed operation, invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /user/verify:
+    post:
+      description: Verifies user with given user id.
+      operationId: verify
+      requestBody:
+        description: User id that is required for verification.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserId'
+      responses:
+        '200':
+          description: User verification completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserVerificationResponse'
+        '400':
+          description: Failed operation, unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /image/uploadProfile:
+    post:
+      description: Uploads a profile image.
+      operationId: uploadProfile
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  required: true
+                profileImage:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '204':
+          description: Failed operation, no user found with given id.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Failed operation, no user found with given id.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /image/uploadIdentity:
+    post:
+      description: Uploads an identity image.
+      operationId: uploadIdentity
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  required: true
+                identityImage:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '204':
+          description: Failed operation, no user found with given id.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Failed operation, no user found with given id.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - name
+        - surname
+        - dateOfBirth
+        - country
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        dateOfBirth:
+          type: string
+        country:
+          type: string
+
+    UserId:
+      type: object
+      required:
+        - userId
+      properties:
+        userId:
+          type: string
+
+    ApiResponse:
+      type: object
+      required:
+        - code
+        - type
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+
+    UserDataResponse:
+      type: object
+      required:
+        - code
+        - type
+        - message
+        - userId
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+        userId:
+          type: string
+
+    UserVerificationResponse:
+      type: object
+      required:
+        - code
+        - verificationRate
+      properties:
+        code:
+          type: integer
+          format: int32
+        verificationRate:
+          type: integer
+          format: int32
+
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string

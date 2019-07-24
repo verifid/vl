@@ -3,6 +3,15 @@ import connexion
 import uuid
 import asyncio
 import json
+import cv2
+
+from vl.models.api_response import ApiResponse  # noqa: E501
+from vl.models.error import Error  # noqa: E501
+from vl.models.user import User  # noqa: E501
+from vl.models.user_data_response import UserDataResponse  # noqa: E501
+from vl.models.user_id import UserId  # noqa: E501
+from vl.models.user_verification_response import UserVerificationResponse  # noqa: E501
+from vl import util
 
 from re import search
 from flask import jsonify
@@ -13,11 +22,32 @@ from facereg import google_images
 from facereg import face_encoder
 from facereg import recognize_faces
 from mocr import TextRecognizer
+from mocr import face_detection
 from nerd import ner
+
+def save_image(user_id, file, identity):
+    if identity:
+        path = 'identity/'
+    else:
+        path = 'profile/'
+    directory = os.getcwd() + '/testsets/' + path +  user_id + '/'
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    _, file_extension = os.path.splitext(file.filename)
+    file_path = directory + 'image' + file_extension
+    file.save(file_path, buffer_size=16384)
+    file.close()
+    # detect face from identity image
+    if identity:
+        face_image = face_detection.detect_face(file_path)
+        face_directory = os.getcwd() + '/testsets/' + 'face/' + user_id + '/'
+        if not os.path.exists(face_directory):
+            os.makedirs(face_directory)
+        cv2.imwrite(face_directory + file.filename, face_image)
 
 loop = asyncio.get_event_loop()
 
-json_model = ['country', 'dateOfBirth', 'gender', 
+json_model = ['country', 'dateOfBirth', 'gender',
             'name', 'placeOfBirth', 'surname']
 entity_tags = {'PERSON': 'name', 'DATE': 'date', 'GPE': 'nationality', 'NORP': 'city'}
 
@@ -37,36 +67,79 @@ async def download_images(name, surname, user_id):
     _, _ = google_images.download(str.format('{0} {1}', name, surname),
                             limit=3, output_directory=output_directory)
 
-def send_data(body):
-    """Creates a user for verification.
 
-    :param body: User object that needs to be added temporarly.
+def send_user_data(body):  # noqa: E501
+    """send_user_data
+
+    Creates a new user for verification. Duplicates are allowed. # noqa: E501
+
+    :param body: User going to be verified.
     :type body: dict | bytes
 
-    :rtype: None
+    :rtype: UserDataResponse
     """
-
     if connexion.request.is_json:
         json_body = connexion.request.get_json()
         if validate_json(json_body) == False:
             response = jsonify({'code': 400, 'type': 'error',
-                    'message': 'Request has missing values.'})
+                                'message': 'Request has missing values.'})
             response.status_code = 400
             return response
         else:
             u_id = user_id()
             loop.run_until_complete(download_images(json_body['name'], json_body['surname'], u_id))
             store.keep(u_id, json.dumps(json_body))
-            response = jsonify({'code': 200, 'type': 'success', 
-                    'message': 'User created with received values.',
-                    'userId': u_id})
+            response = jsonify({'code': 200, 'type': 'success',
+                                'message': 'User created with received values.',
+                                'userId': u_id})
             response.status_code = 200
             return response
     else:
         response = jsonify({'code': 400, 'type': 'error',
-                'message': 'Request needs a user json object.'})
+                            'message': 'Request needs a user json object.'})
         response.status_code = 400
         return response
+
+
+def upload_identity(user_id=None, identity_image=None):  # noqa: E501
+    """upload_identity
+
+    Uploads an identity image. # noqa: E501
+
+
+    :rtype: ApiResponse
+    """
+    if store.value_of(user_id) is None:
+        response = jsonify({'code': 204, 'type': 'error',
+                            'message': 'No user found with given user id.'})
+        response.status_code = 204
+        return response
+    save_image(user_id, identity_image, identity=True)
+    response = jsonify({'code': 200, 'type': 'success',
+                        'message': 'Image file received.'})
+    response.status_code = 200
+    return response
+
+
+def upload_profile(user_id=None, profile_image=None):  # noqa: E501
+    """upload_profile
+
+    Uploads a profile image. # noqa: E501
+
+
+    :rtype: ApiResponse
+    """
+    if store.value_of(user_id) is None:
+        response = jsonify({'code': 204, 'type': 'error',
+                            'message': 'No user found with given user id.'})
+        response.status_code = 204
+        return response
+    save_image(user_id, profile_image, identity=False)
+    response = jsonify({'code': 200, 'type': 'success',
+                        'message': 'Image file received.'})
+    response.status_code = 200
+    return response
+
 
 def get_texts(user_id):
     image_path = os.getcwd() + '/testsets/' + 'identity' + '/' + user_id + '/' + 'image.png'
@@ -143,22 +216,23 @@ def point_on_recognition(names, user_id):
             point = 25
     return point
 
-def verify(body):
-    """Verifies user.
+def verify(body):  # noqa: E501
+    """verify
 
-    :param body: User id and language that required for verification.
+    Verifies user with given user id. # noqa: E501
+
+    :param body: User id that is required for verification.
     :type body: dict | bytes
 
     :rtype: UserVerificationResponse
     """
-
     if connexion.request.is_json:
         body = UserId.from_dict(connexion.request.get_json())
         user_id = body.user_id
         user_json = store.value_of(user_id)
         if user_json == None:
             response = jsonify({'code': 400, 'type': 'error',
-                'message': 'Invalid user id.'})
+                                'message': 'Invalid user id.'})
             response.status_code = 400
             return response
         user_dict = json.loads(user_json)

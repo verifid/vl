@@ -3,8 +3,14 @@
 import sys
 from setuptools import setup, find_packages
 
-NAME = "vl"
+NAME = "swagger_server"
 VERSION = "1.0.0"
+# To install the library, run the following
+#
+# python setup.py install
+#
+# prerequisite: setuptools
+# http://pypi.python.org/pypi/setuptools
 
 REQUIRES = ["connexion"]
 
@@ -20,9 +26,8 @@ setup(
     package_data={'': ['swagger/swagger.yaml']},
     include_package_data=True,
     entry_points={
-        'console_scripts': ['swagger_server=__main__:main']},
+        'console_scripts': ['swagger_server=swagger_server.__main__:main']},
     long_description="""\
-    VerifID - Identity Verification Layer
+    Verification Layer of VerifID - open source identity verification platform.
     """
 )
-
