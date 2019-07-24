@@ -9,6 +9,7 @@ COPY requirements.txt /usr/src/app/
 COPY start.sh /usr/src/app/
 
 RUN apt-get -y update
+RUN apt-get install -y software-properties-common
 RUN apt-get install -y --fix-missing \
     nginx \
     redis-server \
@@ -23,7 +24,7 @@ RUN apt-get install -y --fix-missing \
     curl \
     graphicsmagick \
     libgraphicsmagick1-dev \
-    libatlas-dev \
+    libatlas-base-dev \
     libavcodec-dev \
     libavformat-dev \
     libgtk2.0-dev \
@@ -41,7 +42,7 @@ RUN cd ~ && \
     git clone -b 'v19.9' --single-branch https://github.com/davisking/dlib.git dlib/ && \
     cd  dlib/ && \
     python3 setup.py install --yes USE_AVX_INSTRUCTIONS
-RUN pip3 install --no-cache-dir -r requirements.txt
+RUN pip3 install -r requirements.txt --upgrade
 
 COPY . /usr/src/app
 
