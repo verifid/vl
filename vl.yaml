@@ -44,12 +44,12 @@ paths:
       description: Verifies user with given user id.
       operationId: verify
       requestBody:
-        description: User id that is required for verification.
+        description: User id and language that is required for verification.
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserId'
+              $ref: '#/components/schemas/VerifyUser'
       responses:
         '200':
           description: User verification completed.
@@ -164,12 +164,15 @@ components:
         country:
           type: string
 
-    UserId:
+    VerifyUser:
       type: object
       required:
         - userId
+        - language
       properties:
         userId:
+          type: string
+        language:
           type: string
 
     ApiResponse:

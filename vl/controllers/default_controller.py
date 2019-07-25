@@ -15,7 +15,7 @@ from vl import util
 
 from re import search
 from flask import jsonify
-from vl.models.user_id import UserId
+from vl.models.verify_user import VerifyUser
 from vl.models.user import User
 from vl import store
 from facereg import google_images
@@ -47,8 +47,7 @@ def save_image(user_id, file, identity):
 
 loop = asyncio.get_event_loop()
 
-json_model = ['country', 'dateOfBirth', 'gender',
-            'name', 'placeOfBirth', 'surname']
+json_model = ['country', 'dateOfBirth', 'name', 'surname']
 entity_tags = {'PERSON': 'name', 'DATE': 'date', 'GPE': 'nationality', 'NORP': 'city'}
 
 def validate_json(json_object):
@@ -227,7 +226,7 @@ def verify(body):  # noqa: E501
     :rtype: UserVerificationResponse
     """
     if connexion.request.is_json:
-        body = UserId.from_dict(connexion.request.get_json())
+        body = VerifyUser.from_dict(connexion.request.get_json())  # noqa: E501
         user_id = body.user_id
         user_json = store.value_of(user_id)
         if user_json == None:
