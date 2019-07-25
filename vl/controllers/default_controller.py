@@ -105,9 +105,18 @@ def upload_identity(user_id=None, identity_image=None):  # noqa: E501
 
     Uploads an identity image. # noqa: E501
 
+    :param user_id: 
+    :type user_id: str
+    :param identity_image: 
+    :type identity_image: strstr
 
     :rtype: ApiResponse
     """
+    if user_id is None or identity_image is None:
+        error = Error(code=400, message='User id or image parameter is not given.')
+        response = jsonify(error)
+        response.status_code = 400
+        return response
     if store.value_of(user_id) is None:
         response = jsonify({'code': 204, 'type': 'error',
                             'message': 'No user found with given user id.'})
@@ -125,9 +134,18 @@ def upload_profile(user_id=None, profile_image=None):  # noqa: E501
 
     Uploads a profile image. # noqa: E501
 
+    :param user_id: 
+    :type user_id: str
+    :param profile_image: 
+    :type profile_image: strstr
 
     :rtype: ApiResponse
     """
+    if user_id is None or identity_image is None:
+        error = Error(code=400, message='User id or image parameter is not given.')
+        response = jsonify(error)
+        response.status_code = 400
+        return response
     if store.value_of(user_id) is None:
         response = jsonify({'code': 204, 'type': 'error',
                             'message': 'No user found with given user id.'})

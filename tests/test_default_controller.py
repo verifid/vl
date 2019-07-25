@@ -4,6 +4,7 @@ from __future__ import absolute_import
 
 import os
 import fakeredis
+import base64
 
 from flask import json
 from six import BytesIO
@@ -15,6 +16,7 @@ from vl.models.error import Error  # noqa: E501
 from vl.models.user import User  # noqa: E501
 from vl.models.user_data_response import UserDataResponse  # noqa: E501
 from vl.models.user_id import UserId  # noqa: E501
+from vl.models.verify_user import VerifyUser
 from vl.models.user_verification_response import UserVerificationResponse  # noqa: E501
 from . import BaseTestCase
 
@@ -67,61 +69,6 @@ class TestDefaultController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
 
 
-    def test_verify_fail_with_invalid_user(self):
-        """Test case for verify
-
-        Verifies user.
-        """
-        body = UserId()
-        body.user_id = 'userId'
-        response = self.client.open(
-            '/v1/user/verify',
-            method='POST',
-            data=json.dumps(body),
-            content_type='application/json')
-        self.assert400(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
-
-
-    def test_verify_success_with_valid_user(self):
-        """Test case for verify
-
-        Verifies user.
-        """
-        user_id = 'userId'
-        directory = os.getcwd() + '/testsets/' + 'identity' + '/' + user_id + '/'
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-
-        src_image_path = os.path.dirname(os.path.realpath(__file__)) + '/resources/sample_uk_identity_card.png'
-        copy2(src_image_path, directory)
-        os.rename(directory + '/sample_uk_identity_card.png', directory + 'image.png')
-
-        body = UserId()
-        body.user_id = user_id
-        body.language = 'en_core_web_sm'
-        redis = fakeredis.FakeStrictRedis()
-        store = RedisStore(redis)
-        user = self.create_user()
-        store.keep(user_id, json.dumps(user))
-        response = self.client.open(
-            '/v1/user/verify',
-            method='POST',
-            data=json.dumps(body),
-            content_type='application/json')
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
-
-
-    def create_user(self):
-        user = User()
-        user.name = 'Elizabeth'
-        user.surname = 'Green'
-        user.country = 'United Kingdom'
-        user.date_of_birth = '14.04.1977'
-        return user
-
-
     def test_upload_identity_success(self):
         """Test success case for upload identity.
 
@@ -129,12 +76,17 @@ class TestDefaultController(BaseTestCase):
         """
         redis = fakeredis.FakeStrictRedis()
         store = RedisStore(redis)
-        store.keep('userId', 'user')
+        user = self.create_user()
+        store.keep('userId', json.dumps(user))
         image_path = os.path.dirname(os.path.realpath(__file__)) + '/resources/sample_uk_identity_card.png'
-        with open(image_path, 'rb') as f:
-            image_data = BytesIO(f.read())
-        data = dict(userId='userId',
-                    file=(image_data, 'image.png'))
+        # with open(image_path, 'rb') as f:
+        #     image_data = BytesIO(f.read())
+        with open(image_path, "rb") as imageFile:
+            binary_str = base64.b64encode(imageFile.read())
+        # data = dict(userId='userId',
+        #             file=(image_data, 'image.png'))
+        data = dict(user_id='userId',
+            identity_image=binary_str)                    
         response = self.client.open(
             '/v1/image/uploadIdentity',
             method='POST',
@@ -194,6 +146,60 @@ class TestDefaultController(BaseTestCase):
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
+
+    def test_verify_fail_with_invalid_user(self):
+        """Test case for verify
+
+        Verifies user.
+        """
+        body = UserId()
+        body.user_id = 'userId'
+        response = self.client.open(
+            '/v1/user/verify',
+            method='POST',
+            data=json.dumps(body),
+            content_type='application/json')
+        self.assert400(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+
+    def test_verify_success_with_valid_user(self):
+        """Test case for verify
+
+        Verifies user.
+        """
+        user_id = 'userId'
+        directory = os.getcwd() + '/testsets/' + 'identity' + '/' + user_id + '/'
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+        src_image_path = os.path.dirname(os.path.realpath(__file__)) + '/resources/sample_uk_identity_card.png'
+        copy2(src_image_path, directory)
+        os.rename(directory + '/sample_uk_identity_card.png', directory + 'image.png')
+
+        body = VerifyUser()
+        body.user_id = user_id
+        body.language = 'en_core_web_sm'
+        redis = fakeredis.FakeStrictRedis()
+        store = RedisStore(redis)
+        user = self.create_user()
+        store.keep(user_id, json.dumps(user))
+        response = self.client.open(
+            '/v1/user/verify',
+            method='POST',
+            data=json.dumps(body),
+            content_type='application/json')
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+
+    def create_user(self):
+        user = User()
+        user.name = 'Elizabeth'
+        user.surname = 'Green'
+        user.country = 'United Kingdom'
+        user.date_of_birth = '14.04.1977'
+        return user
 
 if __name__ == '__main__':
     import unittest
