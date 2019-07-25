@@ -4,6 +4,7 @@ import uuid
 import asyncio
 import json
 import cv2
+import requests
 
 from vl.models.api_response import ApiResponse  # noqa: E501
 from vl.models.error import Error  # noqa: E501
@@ -15,6 +16,7 @@ from vl import util
 
 from re import search
 from flask import jsonify
+from flask import request
 from vl.models.verify_user import VerifyUser
 from vl.models.user import User
 from vl import store
@@ -100,18 +102,15 @@ def send_user_data(body):  # noqa: E501
         return response
 
 
-def upload_identity(user_id=None, identity_image=None):  # noqa: E501
+def upload_identity():  # noqa: E501
     """upload_identity
 
     Uploads an identity image. # noqa: E501
 
-    :param user_id: 
-    :type user_id: str
-    :param identity_image: 
-    :type identity_image: strstr
-
     :rtype: ApiResponse
     """
+    user_id = request.form['user_id']
+    identity_image = request.files['file']
     if user_id is None or identity_image is None:
         error = Error(code=400, message='User id or image parameter is not given.')
         response = jsonify(error)
@@ -129,19 +128,16 @@ def upload_identity(user_id=None, identity_image=None):  # noqa: E501
     return response
 
 
-def upload_profile(user_id=None, profile_image=None):  # noqa: E501
+def upload_profile():  # noqa: E501
     """upload_profile
 
     Uploads a profile image. # noqa: E501
 
-    :param user_id: 
-    :type user_id: str
-    :param profile_image: 
-    :type profile_image: strstr
-
     :rtype: ApiResponse
     """
-    if user_id is None or identity_image is None:
+    user_id = request.form['user_id']
+    profile_image = request.files['file']
+    if user_id is None or profile_image is None:
         error = Error(code=400, message='User id or image parameter is not given.')
         response = jsonify(error)
         response.status_code = 400

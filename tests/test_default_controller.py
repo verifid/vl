@@ -79,14 +79,10 @@ class TestDefaultController(BaseTestCase):
         user = self.create_user()
         store.keep('userId', json.dumps(user))
         image_path = os.path.dirname(os.path.realpath(__file__)) + '/resources/sample_uk_identity_card.png'
-        # with open(image_path, 'rb') as f:
-        #     image_data = BytesIO(f.read())
-        with open(image_path, "rb") as imageFile:
-            binary_str = base64.b64encode(imageFile.read())
-        # data = dict(userId='userId',
-        #             file=(image_data, 'image.png'))
+        with open(image_path, 'rb') as f:
+            image_data = BytesIO(f.read())
         data = dict(user_id='userId',
-            identity_image=binary_str)                    
+                    file=(image_data, 'image.png'))                 
         response = self.client.open(
             '/v1/image/uploadIdentity',
             method='POST',
@@ -101,7 +97,7 @@ class TestDefaultController(BaseTestCase):
 
         Uploads an identity image and fails.
         """
-        data = dict(userId='userId_example',
+        data = dict(user_id='userId_example',
                     file=None)
         response = self.client.open(
             '/v1/image/uploadIdentity',
@@ -119,8 +115,9 @@ class TestDefaultController(BaseTestCase):
         """
         redis = fakeredis.FakeStrictRedis()
         store = RedisStore(redis)
-        store.keep('userId', 'user')
-        data = dict(userId='userId',
+        user = self.create_user()
+        store.keep('userId', json.dumps(user))
+        data = dict(user_id='userId',
                     file=(BytesIO(b'some file data'), 'test.png'))
         response = self.client.open(
             '/v1/image/uploadProfile',
@@ -136,7 +133,7 @@ class TestDefaultController(BaseTestCase):
 
         Uploads an profile image and fails.
         """
-        data = dict(userId='userId_example',
+        data = dict(user_id='userId_example',
                     file=None)
         response = self.client.open(
             '/v1/image/uploadProfile',
@@ -152,8 +149,9 @@ class TestDefaultController(BaseTestCase):
 
         Verifies user.
         """
-        body = UserId()
-        body.user_id = 'userId'
+        body = VerifyUser()
+        body.user_id = 'invalid_user_id'
+        body.language = 'en_core_web_sm'
         response = self.client.open(
             '/v1/user/verify',
             method='POST',
