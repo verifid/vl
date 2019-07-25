@@ -1,225 +1,245 @@
----
-swagger: "2.0"
+openapi: 3.0.0
 info:
-  description: "VerifID - Identity Verification Layer"
-  version: "1.0.0"
-  title: "Identity Verification Layer"
+  title: Identity Verification Layer
+  description: Verification Layer of VerifID - open source identity verification platform.
   license:
-    name: "MIT"
-    url: "https://github.com/verifid/vl/blob/master/LICENSE"
-host: "api.verifid.app"
-basePath: "/v1"
-tags:
-- name: "user"
-  description: "User going to identified."
-- name: "image"
-  description: "User's image is going to be used for verification."
-schemes:
-- "https"
+    name: MIT
+    url: https://github.com/verifid/vl/blob/master/LICENSE
+  version: 1.0.0
+servers:
+- url: https://api.verifid.app/v1
 paths:
-  /user/sendData:
+  /user/sendUserData:
     post:
-      tags:
-      - "user"
-      summary: "Creates a user for verification."
-      description: ""
-      operationId: "send_data"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "User object that needs to be added temporarly."
+      description: Creates a new user for verification. Duplicates are allowed.
+      operationId: send_user_data
+      requestBody:
+        description: User going to be verified.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
         required: true
-        schema:
-          $ref: "#/definitions/User"
       responses:
         200:
-          description: "Values received and user created!"
-          schema:
-            $ref: "#/definitions/UserDataResponse"
+          description: User data received successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDataResponse'
         400:
-          description: "Invalid request."
-          schema:
-            $ref: "#/definitions/ApiResponse"
-      x-swagger-router-controller: "vl.controllers.user_controller"
+          description: Failed operation, invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-openapi-router-controller: vl.controllers.default_controller
   /user/verify:
     post:
-      tags:
-      - "user"
-      summary: "Verifies user."
-      description: ""
-      operationId: "verify"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "User id that required for verification."
+      description: Verifies user with given user id.
+      operationId: verify
+      requestBody:
+        description: User id that is required for verification.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserId'
         required: true
-        schema:
-          $ref: "#/definitions/UserId"
       responses:
         200:
-          description: "User not verified."
-          schema:
-            $ref: "#/definitions/UserVerificationResponse"
+          description: User verification completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserVerificationResponse'
         400:
-          description: "Invalid request."
-          schema:
-            $ref: "#/definitions/ApiResponse"
-      x-swagger-router-controller: "vl.controllers.user_controller"
+          description: Failed operation, unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      x-openapi-router-controller: vl.controllers.default_controller
   /image/uploadProfile:
     post:
-      tags:
-      - "image"
-      summary: "Uploads a profile image."
-      description: ""
-      operationId: "upload_profile"
-      consumes:
-      - "multipart/form-data"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "userId"
-        in: "formData"
-        description: "ID of user to update."
-        required: true
-        type: "string"
-      - name: "file"
-        in: "formData"
-        description: "Profile picture to upload."
-        required: true
-        type: "file"
+      description: Uploads a profile image.
+      operationId: upload_profile
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/body'
       responses:
         200:
-          description: "Successful operation."
-          schema:
-            $ref: "#/definitions/ApiResponse"
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         204:
-          description: "Failed operation, no user found with given id."
-          schema:
-            $ref: "#/definitions/ApiResponse"
+          description: Failed operation, no user found with given id.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         400:
-          description: "Failed operation, no user id found on request."
-          schema:
-            $ref: "#/definitions/ApiResponse"
-      x-swagger-router-controller: "vl.controllers.image_controller"
+          description: Failed operation, no user found with given id.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-openapi-router-controller: vl.controllers.default_controller
   /image/uploadIdentity:
     post:
-      tags:
-      - "image"
-      summary: "Uploads an identity card image."
-      description: ""
-      operationId: "upload_identity"
-      consumes:
-      - "multipart/form-data"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "userId"
-        in: "formData"
-        description: "ID of user to update."
-        required: true
-        type: "string"
-      - name: "file"
-        in: "formData"
-        description: "Identity picture to upload."
-        required: true
-        type: "file"
+      description: Uploads an identity image.
+      operationId: upload_identity
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/body_1'
       responses:
         200:
-          description: "Successful operation."
-          schema:
-            $ref: "#/definitions/ApiResponse"
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         204:
-          description: "Failed operation, no user found with given id."
-          schema:
-            $ref: "#/definitions/ApiResponse"
+          description: Failed operation, no user found with given id.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         400:
-          description: "Failed operation, no user id found on request."
-          schema:
-            $ref: "#/definitions/ApiResponse"
-      x-swagger-router-controller: "vl.controllers.image_controller"
-definitions:
-  User:
-    type: "object"
-    properties:
-      name:
-        type: "string"
-      surname:
-        type: "string"
-      dateOfBirth:
-        type: "string"
-      country:
-        type: "string"
-      expireDate:
-        type: "string"
-    example:
-      name: "name"
-      surname: "surname"
-      dateOfBirth: "dateOfBirth"
-      country: "country"
-      expireDate: "expireDate"
-  UserId:
-    type: "object"
-    properties:
-      userId:
-        type: "string"
-    example:
-      userId: "userId"
-  ApiResponse:
-    type: "object"
-    properties:
-      code:
-        type: "integer"
-        format: "int32"
-      type:
-        type: "string"
-      message:
-        type: "string"
-    example:
-      code: 0
-      type: "type"
-      message: "message"
-  UserDataResponse:
-    type: "object"
-    properties:
-      code:
-        type: "integer"
-        format: "int32"
-      type:
-        type: "string"
-      message:
-        type: "string"
-      userId:
-        type: "string"
-    example:
-      code: 0
-      type: "type"
-      message: "message"
-      userId: "userId"
-  UserVerificationResponse:
-    type: "object"
-    properties:
-      code:
-        type: "integer"
-        format: "int32"
-      isVerifed:
-        type: "boolean"
-      message:
-        type: "string"
-      userId:
-        type: "string"
-    example:
-      code: 0
-      isVerifed: true
-      message: "message"
-      userId: "userId"
-# externalDocs:
-#   description: "Find out more about Swagger"
-#   url: "http://swagger.io"
+          description: Failed operation, no user found with given id.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-openapi-router-controller: vl.controllers.default_controller
+components:
+  schemas:
+    User:
+      required:
+      - country
+      - dateOfBirth
+      - name
+      - surname
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        dateOfBirth:
+          type: string
+        country:
+          type: string
+    UserId:
+      required:
+      - userId
+      type: object
+      properties:
+        userId:
+          type: string
+    ApiResponse:
+      required:
+      - code
+      - message
+      - type
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+      example:
+        code: 0
+        type: type
+        message: message
+    UserDataResponse:
+      required:
+      - code
+      - message
+      - type
+      - userId
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+        userId:
+          type: string
+      example:
+        code: 0
+        type: type
+        message: message
+        userId: userId
+    UserVerificationResponse:
+      required:
+      - code
+      - verificationRate
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        verificationRate:
+          type: integer
+          format: int32
+      example:
+        code: 0
+        verificationRate: 6
+    Error:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    body:
+      type: object
+      properties:
+        userId:
+          type: string
+        profileImage:
+          type: string
+          format: binary
+    body_1:
+      type: object
+      properties:
+        userId:
+          type: string
+        identityImage:
+          type: string
+          format: binary
+
