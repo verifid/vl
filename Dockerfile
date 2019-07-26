@@ -43,6 +43,7 @@ RUN cd ~ && \
     cd  dlib/ && \
     python3 setup.py install --yes USE_AVX_INSTRUCTIONS
 RUN pip3 install -r requirements.txt --upgrade
+RUN pip3 install "connexion[swagger-ui]"
 
 COPY . /usr/src/app
 
