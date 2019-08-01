@@ -45,11 +45,11 @@ paths:
       description: Verifies user with given user id.
       operationId: verify
       requestBody:
-        description: User id that is required for verification.
+        description: User id and language that is required for verification.
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserId'
+              $ref: '#/components/schemas/VerifyUser'
         required: true
       responses:
         200:
@@ -153,12 +153,15 @@ components:
           type: string
         country:
           type: string
-    UserId:
+    VerifyUser:
       required:
+      - language
       - userId
       type: object
       properties:
         userId:
+          type: string
+        language:
           type: string
     ApiResponse:
       required:
@@ -231,15 +234,17 @@ components:
       properties:
         userId:
           type: string
+          description: ID of user to update.
         profileImage:
-          type: string
-          format: binary
+          type: file
+          description: Profile picture to upload.
     body_1:
       type: object
       properties:
         userId:
           type: string
+          description: ID of user to update.
         identityImage:
-          type: string
-          format: binary
+          type: file
+          description: Identity image to upload.
 

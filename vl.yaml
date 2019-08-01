@@ -76,9 +76,13 @@ paths:
                 userId:
                   type: string
                   required: true
+                  in: formData
+                  description: 'ID of user to update.'
                 profileImage:
                   type: file
-                  format: binary
+                  required: true
+                  in: formData
+                  description: 'Profile picture to upload.'
       responses:
         '200':
           description: Successful operation.
@@ -117,9 +121,13 @@ paths:
                 userId:
                   type: string
                   required: true
+                  in: formData
+                  description: 'ID of user to update.'
                 identityImage:
                   type: file
-                  format: binary
+                  required: true
+                  in: formData
+                  description: 'Identity image to upload.'
       responses:
         '200':
           description: Successful operation.
