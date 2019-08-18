@@ -5,9 +5,11 @@ import connexion
 
 from vl.encoder import JSONEncoder
 from crontab import CronTab
+from flask_cors import CORS
 
 app = connexion.App(__name__, specification_dir='./swagger/')
 app.app.json_encoder = JSONEncoder
+CORS(app.app)
 app.add_api('swagger.yaml', arguments={'title': 'Identity Verification Layer'})
 port = int(os.environ.get('PORT', 5000))
 app.run(host='0.0.0.0', port=port)
