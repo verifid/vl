@@ -107,25 +107,61 @@ def upload_identity():  # noqa: E501
 
     Uploads an identity image. # noqa: E501
 
+    :param body: 
+    :type body: dict | bytes
+
     :rtype: ApiResponse
     """
-    user_id = request.form['user_id']
-    identity_image = request.files['file']
-    if user_id is None or identity_image is None:
-        error = Error(code=400, message='User id or image parameter is not given.')
-        response = jsonify(error)
-        response.status_code = 400
+    if connexion.request.is_json:
+        body = Body.from_dict(connexion.request.get_json())  # noqa: E501
+        user_id = body.userId
+        identity_image = body.image
+        if user_id is None or identity_image is None:
+            error = Error(code=400, message='User id or image parameter is not given.')
+            response = jsonify(error)
+            response.status_code = 400
+            return response
+        if store.value_of(user_id) is None:
+            response = jsonify({'code': 204, 'type': 'error',
+                                'message': 'No user found with given user id.'})
+            response.status_code = 204
+            return response
+        # save_image(user_id, identity_image, identity=True)
+        response = jsonify({'code': 200, 'type': 'success',
+                            'message': 'Image file received.'})
+        response.status_code = 200
         return response
-    if store.value_of(user_id) is None:
-        response = jsonify({'code': 204, 'type': 'error',
-                            'message': 'No user found with given user id.'})
-        response.status_code = 204
+
+
+def upload_profile(body=None):  # noqa: E501
+    """upload_profile
+
+    Uploads a profile image. # noqa: E501
+
+    :param body: 
+    :type body: dict | bytes
+
+    :rtype: ApiResponse
+    """
+    if connexion.request.is_json:
+        body = Body.from_dict(connexion.request.get_json())  # noqa: E501
+        user_id = body.userId
+        profile_image = body.image
+        if user_id is None or profile_image is None:
+            error = Error(code=400, message='User id or image parameter is not given.')
+            response = jsonify(error)
+            response.status_code = 400
+            return response
+        if store.value_of(user_id) is None:
+            response = jsonify({'code': 204, 'type': 'error',
+                                'message': 'No user found with given user id.'})
+            response.status_code = 204
+            return response
+        # save_image(user_id, profile_image, identity=False)
+        response = jsonify({'code': 200, 'type': 'success',
+                            'message': 'Image file received.'})
+        response.status_code = 200
         return response
-    save_image(user_id, identity_image, identity=True)
-    response = jsonify({'code': 200, 'type': 'success',
-                        'message': 'Image file received.'})
-    response.status_code = 200
-    return response
 
 
 def upload_profile():  # noqa: E501

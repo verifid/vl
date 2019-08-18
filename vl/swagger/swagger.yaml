@@ -71,7 +71,7 @@ paths:
       operationId: upload_profile
       requestBody:
         content:
-          multipart/form-data:
+          application/octet-stream:
             schema:
               $ref: '#/components/schemas/body'
       responses:
@@ -106,9 +106,9 @@ paths:
       operationId: upload_identity
       requestBody:
         content:
-          multipart/form-data:
+          application/octet-stream:
             schema:
-              $ref: '#/components/schemas/body_1'
+              $ref: '#/components/schemas/body'
       responses:
         200:
           description: Successful operation.
@@ -230,21 +230,12 @@ components:
         message:
           type: string
     body:
-      type: object
       properties:
         userId:
           type: string
           description: ID of user to update.
-        profileImage:
-          type: file
+        image:
+          type: string
           description: Profile picture to upload.
-    body_1:
-      type: object
-      properties:
-        userId:
-          type: string
-          description: ID of user to update.
-        identityImage:
-          type: file
-          description: Identity image to upload.
+          format: binary
 

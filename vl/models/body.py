@@ -14,25 +14,25 @@ class Body(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, user_id: str=None, profile_image: str=None):  # noqa: E501
+    def __init__(self, user_id: str=None, image: str=None):  # noqa: E501
         """Body - a model defined in Swagger
 
         :param user_id: The user_id of this Body.  # noqa: E501
         :type user_id: str
-        :param profile_image: The profile_image of this Body.  # noqa: E501
-        :type profile_image: str
+        :param image: The image of this Body.  # noqa: E501
+        :type image: str
         """
         self.swagger_types = {
             'user_id': str,
-            'profile_image': str
+            'image': str
         }
 
         self.attribute_map = {
             'user_id': 'userId',
-            'profile_image': 'profileImage'
+            'image': 'image'
         }
         self._user_id = user_id
-        self._profile_image = profile_image
+        self._image = image
 
     @classmethod
     def from_dict(cls, dikt) -> 'Body':
@@ -49,6 +49,7 @@ class Body(Model):
     def user_id(self) -> str:
         """Gets the user_id of this Body.
 
+        ID of user to update.  # noqa: E501
 
         :return: The user_id of this Body.
         :rtype: str
@@ -59,6 +60,7 @@ class Body(Model):
     def user_id(self, user_id: str):
         """Sets the user_id of this Body.
 
+        ID of user to update.  # noqa: E501
 
         :param user_id: The user_id of this Body.
         :type user_id: str
@@ -67,22 +69,24 @@ class Body(Model):
         self._user_id = user_id
 
     @property
-    def profile_image(self) -> str:
-        """Gets the profile_image of this Body.
+    def image(self) -> str:
+        """Gets the image of this Body.
 
+        Profile picture to upload.  # noqa: E501
 
-        :return: The profile_image of this Body.
+        :return: The image of this Body.
         :rtype: str
         """
-        return self._profile_image
+        return self._image
 
-    @profile_image.setter
-    def profile_image(self, profile_image: str):
-        """Sets the profile_image of this Body.
+    @image.setter
+    def image(self, image: str):
+        """Sets the image of this Body.
 
+        Profile picture to upload.  # noqa: E501
 
-        :param profile_image: The profile_image of this Body.
-        :type profile_image: str
+        :param image: The image of this Body.
+        :type image: str
         """
 
-        self._profile_image = profile_image
+        self._image = image

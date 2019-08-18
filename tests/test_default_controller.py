@@ -82,12 +82,12 @@ class TestDefaultController(BaseTestCase):
         with open(image_path, 'rb') as f:
             image_data = BytesIO(f.read())
         data = dict(user_id='userId',
-                    file=(image_data, 'image.png'))                 
+                    file=(image_data, 'image.png'))
         response = self.client.open(
             '/v1/image/uploadIdentity',
             method='POST',
             data=data,
-            content_type='multipart/form-data')
+            content_type='application/octet-stream')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
@@ -103,7 +103,7 @@ class TestDefaultController(BaseTestCase):
             '/v1/image/uploadIdentity',
             method='POST',
             data=data,
-            content_type='multipart/form-data')
+            content_type='application/octet-stream')
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
@@ -123,7 +123,7 @@ class TestDefaultController(BaseTestCase):
             '/v1/image/uploadProfile',
             method='POST',
             data=data,
-            content_type='multipart/form-data')
+            content_type='application/octet-stream')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
@@ -139,7 +139,7 @@ class TestDefaultController(BaseTestCase):
             '/v1/image/uploadProfile',
             method='POST',
             data=data,
-            content_type='multipart/form-data')
+            content_type='application/octet-stream')
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 

@@ -69,19 +69,17 @@ paths:
       operationId: uploadProfile
       requestBody:
         content:
-          multipart/form-data:
+          application/octet-stream:
             schema:
-              type: object
               properties:
                 userId:
                   type: string
                   required: true
-                  in: formData
                   description: 'ID of user to update.'
-                profileImage:
-                  type: file
+                image:
+                  type: string
+                  format: binary
                   required: true
-                  in: formData
                   description: 'Profile picture to upload.'
       responses:
         '200':
@@ -114,19 +112,17 @@ paths:
       operationId: uploadIdentity
       requestBody:
         content:
-          multipart/form-data:
+          application/octet-stream:
             schema:
-              type: object
               properties:
                 userId:
                   type: string
                   required: true
-                  in: formData
                   description: 'ID of user to update.'
-                identityImage:
-                  type: file
+                image:
+                  type: string
+                  format: binary
                   required: true
-                  in: formData
                   description: 'Identity image to upload.'
       responses:
         '200':
