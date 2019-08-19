@@ -122,7 +122,7 @@ def upload_identity():  # noqa: E501
         response = ApiResponse(code=200, type='success', message='Identity image file received.')
         return response, 200
     else:
-        error = Error(code=400, message='User id or image parameter is not given.')
+        error = Error(code=400, message='Provide a json payload that contains userId and image data string.')
         return error, 400
 
 
@@ -150,7 +150,7 @@ def upload_profile(body=None):  # noqa: E501
         response = ApiResponse(code=200, type='success', message='Profile image file received.')
         return response, 200
     else:
-        error = Error(code=400, message='User id or image parameter is not given.')
+        error = Error(code=400, message='Provide a json payload that contains userId and image data string.')
         return error, 400
 
 
@@ -263,3 +263,6 @@ def verify(body):  # noqa: E501
         verification_rate = text_validation_point + face_validation_point
         response = UserVerificationResponse(code=200, verification_rate=verification_rate)
         return response, 200
+    else:
+        error = Error(code=400, message='Provide a json payload that contains userId')
+        return error, 400
