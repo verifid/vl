@@ -85,24 +85,17 @@ def send_user_data(body):  # noqa: E501
     if connexion.request.is_json:
         json_body = connexion.request.get_json()
         if validate_json(json_body) == False:
-            response = jsonify({'code': 400, 'type': 'error',
-                                'message': 'Request has missing values.'})
-            response.status_code = 400
-            return response
+            error = Error(code=400, message='Request has missing values.')
+            return error, 400
         else:
             u_id = user_id()
-            loop.run_until_complete(download_images(json_body['name'], json_body['surname'], u_id))
             store.keep(u_id, json.dumps(json_body))
-            response = jsonify({'code': 200, 'type': 'success',
-                                'message': 'User created with received values.',
-                                'userId': u_id})
-            response.status_code = 200
-            return response
+            response = UserDataResponse(code=200, type='success',
+                                        message='User created with received values.', user_id=u_id)
+            return response, 200
     else:
-        response = jsonify({'code': 400, 'type': 'error',
-                            'message': 'Request needs a user json object.'})
-        response.status_code = 400
-        return response
+        error = Error(code=400, message='Request needs a user json object.')
+        return error, 400
 
 
 def upload_identity():  # noqa: E501
@@ -121,24 +114,16 @@ def upload_identity():  # noqa: E501
         identity_image = body.image
         if user_id is None or identity_image is None:
             error = Error(code=400, message='User id or image parameter is not given.')
-            response = jsonify(error)
-            response.status_code = 400
-            return response
+            return error, 400
         if store.value_of(user_id) is None:
-            response = jsonify({'code': 204, 'type': 'error',
-                                'message': 'No user found with given user id.'})
-            response.status_code = 204
-            return response
+            response = ApiResponse(code=204, type='error', message='No user found with given user id.')
+            return response, 204
         save_image(user_id, identity_image, identity=True)
-        response = jsonify({'code': 200, 'type': 'success',
-                            'message': 'Image file received.'})
-        response.status_code = 200
-        return response
+        response = ApiResponse(code=200, type='success', message='Identity image file received.')
+        return response, 200
     else:
         error = Error(code=400, message='User id or image parameter is not given.')
-        response = jsonify(error)
-        response.status_code = 400
-        return response
+        return error, 400
 
 
 def upload_profile(body=None):  # noqa: E501
@@ -157,24 +142,16 @@ def upload_profile(body=None):  # noqa: E501
         profile_image = body.image
         if user_id is None or profile_image is None:
             error = Error(code=400, message='User id or image parameter is not given.')
-            response = jsonify(error)
-            response.status_code = 400
-            return response
+            return error, 400
         if store.value_of(user_id) is None:
-            response = jsonify({'code': 204, 'type': 'error',
-                                'message': 'No user found with given user id.'})
-            response.status_code = 204
-            return response
+            response = ApiResponse(code=204, type='error', message='No user found with given user id.')
+            return response, 204
         save_image(user_id, profile_image, identity=False)
-        response = jsonify({'code': 200, 'type': 'success',
-                            'message': 'Image file received.'})
-        response.status_code = 200
-        return response
+        response = ApiResponse(code=200, type='success', message='Profile image file received.')
+        return response, 200
     else:
         error = Error(code=400, message='User id or image parameter is not given.')
-        response = jsonify(error)
-        response.status_code = 400
-        return response
+        return error, 400
 
 
 def get_texts(user_id):
@@ -267,18 +244,14 @@ def verify(body):  # noqa: E501
         user_id = body.user_id
         user_json = store.value_of(user_id)
         if user_json == None:
-            response = jsonify({'code': 400, 'type': 'error',
-                                'message': 'Invalid user id.'})
-            response.status_code = 400
-            return response
+            response = Error(code=400, message='Invalid user id.')
+            return response, 400
         user_dict = json.loads(user_json)
         user = User.from_dict(user_dict)
         texts = get_texts(user_id)
         if not texts:
-            response = jsonify({'code': 400, 'type': 'error',
-                                'message': 'Can not recognize characters from identity card.'})
-            response.status_code = 400
-            return response
+            response = Error(code=400, message='Can not recognize characters from identity card.')
+            return response, 400
         language = body.language
         doc_text_label = get_doc(texts, language=language)
         user_text_label = create_user_text_label(user)
@@ -288,6 +261,5 @@ def verify(body):  # noqa: E501
         face_validation_point = point_on_recognition(names, user_id)
         print('face_validation_point: ' + str(face_validation_point))
         verification_rate = text_validation_point + face_validation_point
-        response = jsonify({'code': 200, 'verificationRate': verification_rate})
-        response.status_code = 200
-        return response
+        response = UserVerificationResponse(code=200, verification_rate=verification_rate)
+        return response, 200
