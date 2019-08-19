@@ -18,7 +18,7 @@ from vl.models.user_data_response import UserDataResponse  # noqa: E501
 from vl.models.user_id import UserId  # noqa: E501
 from vl.models.verify_user import VerifyUser
 from vl.models.user_verification_response import UserVerificationResponse  # noqa: E501
-from vl.models.body import Body  # noqa: E501
+from vl.models.image_upload import ImageUpload  # noqa: E501
 from . import BaseTestCase
 
 
@@ -82,7 +82,7 @@ class TestDefaultController(BaseTestCase):
         image_path = os.path.dirname(os.path.realpath(__file__)) + '/resources/sample_uk_identity_card.png'
         with open(image_path, 'rb') as imageFile:
             image_data = base64.b64encode(imageFile.read()).decode('utf-8')
-        body = Body()
+        body = ImageUpload()
         body.user_id = "userId"
         body.image = image_data
         response = self.client.open(
@@ -99,7 +99,7 @@ class TestDefaultController(BaseTestCase):
 
         Uploads an identity image and fails.
         """
-        body = Body()
+        body = ImageUpload()
         body.user_id = "userId"
         response = self.client.open(
             '/v1/image/uploadIdentity',
@@ -122,7 +122,7 @@ class TestDefaultController(BaseTestCase):
         image_path = os.path.dirname(os.path.realpath(__file__)) + '/resources/profile.jpg'
         with open(image_path, 'rb') as imageFile:
             image_data = base64.b64encode(imageFile.read()).decode('utf-8')
-        body = Body()
+        body = ImageUpload()
         body.user_id = "userId"
         body.image = image_data
         response = self.client.open(
@@ -139,9 +139,8 @@ class TestDefaultController(BaseTestCase):
 
         Uploads an profile image and fails.
         """
-        body = Body()
+        body = ImageUpload()
         body.user_id = "userId"
-        body.image = None
         response = self.client.open(
             '/v1/image/uploadProfile',
             method='POST',

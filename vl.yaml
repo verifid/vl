@@ -68,19 +68,12 @@ paths:
       description: Uploads a profile image.
       operationId: uploadProfile
       requestBody:
+        description: User id and base64 encoded binary string of image file.
+        required: true
         content:
-          application/octet-stream:
+          application/json:
             schema:
-              properties:
-                userId:
-                  type: string
-                  required: true
-                  description: 'ID of user to update.'
-                image:
-                  type: string
-                  format: binary
-                  required: true
-                  description: 'Profile picture to upload.'
+              $ref: '#components/schemas/ImageUpload'
       responses:
         '200':
           description: Successful operation.
@@ -111,19 +104,12 @@ paths:
       description: Uploads an identity image.
       operationId: uploadIdentity
       requestBody:
+        description: User id and base64 encoded binary string of image file.
+        required: true
         content:
-          application/octet-stream:
+          application/json:
             schema:
-              properties:
-                userId:
-                  type: string
-                  required: true
-                  description: 'ID of user to update.'
-                image:
-                  type: string
-                  format: binary
-                  required: true
-                  description: 'Identity image to upload.'
+              $ref: '#components/schemas/ImageUpload'
       responses:
         '200':
           description: Successful operation.
@@ -178,6 +164,18 @@ components:
           type: string
         language:
           type: string
+
+    ImageUpload:
+      type: object
+      required:
+        - userId
+        - image
+      properties:
+        userId:
+          type: string
+        image:
+          type: string
+          format: binary
 
     ApiResponse:
       type: object

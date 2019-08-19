@@ -20,7 +20,7 @@ from flask import jsonify
 from flask import request
 from vl.models.verify_user import VerifyUser
 from vl.models.user import User
-from vl.models.body import Body
+from vl.models.image_upload import ImageUpload
 from vl import store
 from facereg import google_images
 from facereg import face_encoder
@@ -109,7 +109,7 @@ def upload_identity():  # noqa: E501
     :rtype: ApiResponse
     """
     if connexion.request.is_json:
-        body = Body.from_dict(connexion.request.get_json())  # noqa: E501
+        body = ImageUpload.from_dict(connexion.request.get_json())  # noqa: E501
         user_id = body.user_id
         identity_image = body.image
         if user_id is None or identity_image is None:
@@ -137,7 +137,7 @@ def upload_profile(body=None):  # noqa: E501
     :rtype: ApiResponse
     """
     if connexion.request.is_json:
-        body = Body.from_dict(connexion.request.get_json())  # noqa: E501
+        body = ImageUpload.from_dict(connexion.request.get_json())  # noqa: E501
         user_id = body.user_id
         profile_image = body.image
         if user_id is None or profile_image is None:
