@@ -5,6 +5,7 @@ import asyncio
 import json
 import cv2
 import requests
+import base64
 
 from vl.models.api_response import ApiResponse  # noqa: E501
 from vl.models.error import Error  # noqa: E501
@@ -19,6 +20,7 @@ from flask import jsonify
 from flask import request
 from vl.models.verify_user import VerifyUser
 from vl.models.user import User
+from vl.models.body import Body
 from vl import store
 from facereg import google_images
 from facereg import face_encoder
@@ -27,7 +29,7 @@ from mocr import TextRecognizer
 from mocr import face_detection
 from nerd import ner
 
-def save_image(user_id, file, identity):
+def save_image(user_id, image_str, identity):
     if identity:
         path = 'identity/'
     else:
@@ -35,17 +37,18 @@ def save_image(user_id, file, identity):
     directory = os.getcwd() + '/testsets/' + path +  user_id + '/'
     if not os.path.exists(directory):
         os.makedirs(directory)
-    _, file_extension = os.path.splitext(file.filename)
-    file_path = directory + 'image' + file_extension
-    file.save(file_path, buffer_size=16384)
-    file.close()
+    file_path = directory + 'image' + '.jpg'
+    image_data = base64.b64decode(image_str)
+    with open(file_path, 'wb') as f:
+        f.write(image_data)
+
     # detect face from identity image
     if identity:
         face_image = face_detection.detect_face(file_path)
         face_directory = os.getcwd() + '/testsets/' + 'face/' + user_id + '/'
         if not os.path.exists(face_directory):
             os.makedirs(face_directory)
-        cv2.imwrite(face_directory + file.filename, face_image)
+        cv2.imwrite(face_directory + 'image.jpg', face_image)
 
 loop = asyncio.get_event_loop()
 
@@ -114,7 +117,7 @@ def upload_identity():  # noqa: E501
     """
     if connexion.request.is_json:
         body = Body.from_dict(connexion.request.get_json())  # noqa: E501
-        user_id = body.userId
+        user_id = body.user_id
         identity_image = body.image
         if user_id is None or identity_image is None:
             error = Error(code=400, message='User id or image parameter is not given.')
@@ -126,10 +129,15 @@ def upload_identity():  # noqa: E501
                                 'message': 'No user found with given user id.'})
             response.status_code = 204
             return response
-        # save_image(user_id, identity_image, identity=True)
+        save_image(user_id, identity_image, identity=True)
         response = jsonify({'code': 200, 'type': 'success',
                             'message': 'Image file received.'})
         response.status_code = 200
+        return response
+    else:
+        error = Error(code=400, message='User id or image parameter is not given.')
+        response = jsonify(error)
+        response.status_code = 400
         return response
 
 
@@ -145,7 +153,7 @@ def upload_profile(body=None):  # noqa: E501
     """
     if connexion.request.is_json:
         body = Body.from_dict(connexion.request.get_json())  # noqa: E501
-        user_id = body.userId
+        user_id = body.user_id
         profile_image = body.image
         if user_id is None or profile_image is None:
             error = Error(code=400, message='User id or image parameter is not given.')
@@ -157,37 +165,16 @@ def upload_profile(body=None):  # noqa: E501
                                 'message': 'No user found with given user id.'})
             response.status_code = 204
             return response
-        # save_image(user_id, profile_image, identity=False)
+        save_image(user_id, profile_image, identity=False)
         response = jsonify({'code': 200, 'type': 'success',
                             'message': 'Image file received.'})
         response.status_code = 200
         return response
-
-
-def upload_profile():  # noqa: E501
-    """upload_profile
-
-    Uploads a profile image. # noqa: E501
-
-    :rtype: ApiResponse
-    """
-    user_id = request.form['user_id']
-    profile_image = request.files['file']
-    if user_id is None or profile_image is None:
+    else:
         error = Error(code=400, message='User id or image parameter is not given.')
         response = jsonify(error)
         response.status_code = 400
         return response
-    if store.value_of(user_id) is None:
-        response = jsonify({'code': 204, 'type': 'error',
-                            'message': 'No user found with given user id.'})
-        response.status_code = 204
-        return response
-    save_image(user_id, profile_image, identity=False)
-    response = jsonify({'code': 200, 'type': 'success',
-                        'message': 'Image file received.'})
-    response.status_code = 200
-    return response
 
 
 def get_texts(user_id):
@@ -248,7 +235,7 @@ def recognize_face(user_id):
     datasets_path = os.getcwd() + '/testsets/identity/' + user_id
     encodings_path = os.path.dirname(os.path.realpath(__file__)) + '/encodings.pickle'
     face_encoder.encode_faces(datasets=datasets_path, encodings=encodings_path, detection_method='cnn')
-    image_path = os.getcwd() + '/testsets/face/' + user_id + '/' + 'image.png'
+    image_path = os.getcwd() + '/testsets/face/' + user_id + '/' + 'image.jpg'
     names = recognize_faces.recognize(image_path, datasets=datasets_path, encodings=encodings_path, detection_method='cnn')
     return names
 

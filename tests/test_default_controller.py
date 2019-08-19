@@ -18,6 +18,7 @@ from vl.models.user_data_response import UserDataResponse  # noqa: E501
 from vl.models.user_id import UserId  # noqa: E501
 from vl.models.verify_user import VerifyUser
 from vl.models.user_verification_response import UserVerificationResponse  # noqa: E501
+from vl.models.body import Body  # noqa: E501
 from . import BaseTestCase
 
 
@@ -79,15 +80,16 @@ class TestDefaultController(BaseTestCase):
         user = self.create_user()
         store.keep('userId', json.dumps(user))
         image_path = os.path.dirname(os.path.realpath(__file__)) + '/resources/sample_uk_identity_card.png'
-        with open(image_path, 'rb') as f:
-            image_data = BytesIO(f.read())
-        data = dict(user_id='userId',
-                    file=(image_data, 'image.png'))
+        with open(image_path, 'rb') as imageFile:
+            image_data = base64.b64encode(imageFile.read()).decode('utf-8')
+        body = Body()
+        body.user_id = "userId"
+        body.image = image_data
         response = self.client.open(
             '/v1/image/uploadIdentity',
             method='POST',
-            data=data,
-            content_type='application/octet-stream')
+            data=json.dumps(body),
+            content_type='application/json')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
@@ -97,13 +99,13 @@ class TestDefaultController(BaseTestCase):
 
         Uploads an identity image and fails.
         """
-        data = dict(user_id='userId_example',
-                    file=None)
+        body = Body()
+        body.user_id = "userId"
         response = self.client.open(
             '/v1/image/uploadIdentity',
             method='POST',
-            data=data,
-            content_type='application/octet-stream')
+            data=json.dumps(body),
+            content_type='application/json')
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
@@ -117,13 +119,17 @@ class TestDefaultController(BaseTestCase):
         store = RedisStore(redis)
         user = self.create_user()
         store.keep('userId', json.dumps(user))
-        data = dict(user_id='userId',
-                    file=(BytesIO(b'some file data'), 'test.png'))
+        image_path = os.path.dirname(os.path.realpath(__file__)) + '/resources/profile.jpg'
+        with open(image_path, 'rb') as imageFile:
+            image_data = base64.b64encode(imageFile.read()).decode('utf-8')
+        body = Body()
+        body.user_id = "userId"
+        body.image = image_data
         response = self.client.open(
             '/v1/image/uploadProfile',
             method='POST',
-            data=data,
-            content_type='application/octet-stream')
+            data=json.dumps(body),
+            content_type='application/json')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
@@ -133,13 +139,14 @@ class TestDefaultController(BaseTestCase):
 
         Uploads an profile image and fails.
         """
-        data = dict(user_id='userId_example',
-                    file=None)
+        body = Body()
+        body.user_id = "userId"
+        body.image = None
         response = self.client.open(
             '/v1/image/uploadProfile',
             method='POST',
-            data=data,
-            content_type='application/octet-stream')
+            data=json.dumps(body),
+            content_type='application/json')
         self.assert400(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
