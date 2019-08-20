@@ -1,8 +1,12 @@
+sudo: required
 language: python
 
 python:
   - "3.6"
   - "3.7"
+
+services:
+  - docker
 
 # command to install dependencies
 install:
@@ -16,6 +20,8 @@ install:
 # command to run tests
 script:
   - py.test -s -v --cov-report xml --cov=vl
+  # - docker build -t vl .
 
 after_success:
   - codecov
+  - sh ./deploy_heroku.sh

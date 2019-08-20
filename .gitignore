@@ -104,3 +104,7 @@ venv.bak/
 
 # IntelliJ
 .idea/
+
+# TestSets and pickle
+testsets/
+vl/controllers/encodings.pickle
