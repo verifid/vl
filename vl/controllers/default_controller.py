@@ -155,7 +155,7 @@ def upload_profile(body=None):  # noqa: E501
 
 
 def get_texts(user_id):
-    image_path = os.getcwd() + '/testsets/' + 'identity' + '/' + user_id + '/' + 'image.png'
+    image_path = os.getcwd() + '/testsets/' + 'identity' + '/' + user_id + '/' + 'image.jpg'
     east_path = os.getcwd() + '/vl' + '/' + 'model/frozen_east_text_detection.pb'
     text_recognizer = TextRecognizer(image_path, east_path)
     (image, _, _) = text_recognizer.load_image()
