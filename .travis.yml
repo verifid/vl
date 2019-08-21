@@ -1,9 +1,13 @@
-sudo: required
 language: python
-
-python:
-  - "3.6"
-  - "3.7"
+  
+matrix:
+    include:
+        - python: 3.6
+          dist: trusty
+          sudo: true
+        - python: 3.7
+          dist: xenial
+          sudo: true
 
 services:
   - docker
