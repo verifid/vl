@@ -1,13 +1,6 @@
 language: python
-  
-matrix:
-    include:
-        - python: 3.6
-          dist: trusty
-          sudo: true
-        - python: 3.7
-          dist: xenial
-          sudo: true
+python:
+  - "3.6"
 
 services:
   - docker
@@ -21,11 +14,11 @@ install:
   - pip install -r requirements.txt --upgrade
   - pip install -r requirements.testing.txt --upgrade
 
-# command to run tests
-script:
-  - py.test -s -v --cov-report xml --cov=vl
-  # - docker build -t vl .
-
-after_success:
-  - codecov
-  - sh ./deploy_heroku.sh
+jobs:
+  include:
+    - stage: unit tests
+      script: 
+      - py.test -s -v --cov-report xml --cov=vl
+      - codecov
+    - stage: deploy to production
+      script: sh ./deploy_heroku.sh
