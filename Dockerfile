@@ -46,6 +46,7 @@ RUN cd ~ && \
 RUN apt-get -y install python3-pip
 RUN pip3 install -r requirements.txt --upgrade
 RUN pip3 install "connexion[swagger-ui]"
+RUN python3 -m nerd -d en_core_web_sm
 
 COPY . /usr/src/app
 

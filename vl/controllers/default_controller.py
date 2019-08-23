@@ -258,6 +258,9 @@ def verify(body):  # noqa: E501
         text_validation_point = validate_text_label(doc_text_label, user_text_label)
         print('text_validation_point: ' + str(text_validation_point))
         names = recognize_face(user_id)
+        if not names:
+            response = Error(code=400, message='Can not recognize face from identity card.')
+            return response, 400
         face_validation_point = point_on_recognition(names, user_id)
         print('face_validation_point: ' + str(face_validation_point))
         verification_rate = text_validation_point + face_validation_point
