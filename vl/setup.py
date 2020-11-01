@@ -23,11 +23,10 @@ setup(
     keywords=["Swagger", "Identity Verification Layer"],
     install_requires=REQUIRES,
     packages=find_packages(),
-    package_data={'': ['swagger/swagger.yaml']},
+    package_data={"": ["swagger/swagger.yaml"]},
     include_package_data=True,
-    entry_points={
-        'console_scripts': ['swagger_server=swagger_server.__main__:main']},
+    entry_points={"console_scripts": ["swagger_server=swagger_server.__main__:main"]},
     long_description="""\
     Verification Layer of VerifID - open source identity verification platform.
-    """
+    """,
 )

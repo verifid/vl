@@ -14,7 +14,14 @@ class UserDataResponse(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, code: int=None, type: str=None, message: str=None, user_id: str=None):  # noqa: E501
+
+    def __init__(
+        self,
+        code: int = None,
+        type: str = None,
+        message: str = None,
+        user_id: str = None,
+    ):  # noqa: E501
         """UserDataResponse - a model defined in Swagger
 
         :param code: The code of this UserDataResponse.  # noqa: E501
@@ -26,18 +33,13 @@ class UserDataResponse(Model):
         :param user_id: The user_id of this UserDataResponse.  # noqa: E501
         :type user_id: str
         """
-        self.swagger_types = {
-            'code': int,
-            'type': str,
-            'message': str,
-            'user_id': str
-        }
+        self.swagger_types = {"code": int, "type": str, "message": str, "user_id": str}
 
         self.attribute_map = {
-            'code': 'code',
-            'type': 'type',
-            'message': 'message',
-            'user_id': 'userId'
+            "code": "code",
+            "type": "type",
+            "message": "message",
+            "user_id": "userId",
         }
         self._code = code
         self._type = type
@@ -45,7 +47,7 @@ class UserDataResponse(Model):
         self._user_id = user_id
 
     @classmethod
-    def from_dict(cls, dikt) -> 'UserDataResponse':
+    def from_dict(cls, dikt) -> "UserDataResponse":
         """Returns the dict as a model
 
         :param dikt: A dict.
@@ -74,7 +76,9 @@ class UserDataResponse(Model):
         :type code: int
         """
         if code is None:
-            raise ValueError("Invalid value for `code`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `code`, must not be `None`"
+            )  # noqa: E501
 
         self._code = code
 
@@ -97,7 +101,9 @@ class UserDataResponse(Model):
         :type type: str
         """
         if type is None:
-            raise ValueError("Invalid value for `type`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `type`, must not be `None`"
+            )  # noqa: E501
 
         self._type = type
 
@@ -120,7 +126,9 @@ class UserDataResponse(Model):
         :type message: str
         """
         if message is None:
-            raise ValueError("Invalid value for `message`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `message`, must not be `None`"
+            )  # noqa: E501
 
         self._message = message
 
@@ -143,6 +151,8 @@ class UserDataResponse(Model):
         :type user_id: str
         """
         if user_id is None:
-            raise ValueError("Invalid value for `user_id`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `user_id`, must not be `None`"
+            )  # noqa: E501
 
         self._user_id = user_id

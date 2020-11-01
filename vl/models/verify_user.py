@@ -14,7 +14,8 @@ class VerifyUser(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, user_id: str=None, language: str=None):  # noqa: E501
+
+    def __init__(self, user_id: str = None, language: str = None):  # noqa: E501
         """VerifyUser - a model defined in Swagger
 
         :param user_id: The user_id of this VerifyUser.  # noqa: E501
@@ -22,20 +23,14 @@ class VerifyUser(Model):
         :param language: The language of this VerifyUser.  # noqa: E501
         :type language: str
         """
-        self.swagger_types = {
-            'user_id': str,
-            'language': str
-        }
+        self.swagger_types = {"user_id": str, "language": str}
 
-        self.attribute_map = {
-            'user_id': 'userId',
-            'language': 'language'
-        }
+        self.attribute_map = {"user_id": "userId", "language": "language"}
         self._user_id = user_id
         self._language = language
 
     @classmethod
-    def from_dict(cls, dikt) -> 'VerifyUser':
+    def from_dict(cls, dikt) -> "VerifyUser":
         """Returns the dict as a model
 
         :param dikt: A dict.
@@ -64,7 +59,9 @@ class VerifyUser(Model):
         :type user_id: str
         """
         if user_id is None:
-            raise ValueError("Invalid value for `user_id`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `user_id`, must not be `None`"
+            )  # noqa: E501
 
         self._user_id = user_id
 
@@ -87,6 +84,8 @@ class VerifyUser(Model):
         :type language: str
         """
         if language is None:
-            raise ValueError("Invalid value for `language`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `language`, must not be `None`"
+            )  # noqa: E501
 
         self._language = language

@@ -14,23 +14,20 @@ class UserId(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, user_id: str=None):  # noqa: E501
+
+    def __init__(self, user_id: str = None):  # noqa: E501
         """UserId - a model defined in Swagger
 
         :param user_id: The user_id of this UserId.  # noqa: E501
         :type user_id: str
         """
-        self.swagger_types = {
-            'user_id': str
-        }
+        self.swagger_types = {"user_id": str}
 
-        self.attribute_map = {
-            'user_id': 'userId'
-        }
+        self.attribute_map = {"user_id": "userId"}
         self._user_id = user_id
 
     @classmethod
-    def from_dict(cls, dikt) -> 'UserId':
+    def from_dict(cls, dikt) -> "UserId":
         """Returns the dict as a model
 
         :param dikt: A dict.
@@ -59,6 +56,8 @@ class UserId(Model):
         :type user_id: str
         """
         if user_id is None:
-            raise ValueError("Invalid value for `user_id`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `user_id`, must not be `None`"
+            )  # noqa: E501
 
         self._user_id = user_id

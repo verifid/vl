@@ -6,8 +6,8 @@ import fakeredis
 
 from vl.store.redis_store import RedisStore
 
-class RedisStoreTest(unittest.TestCase):
 
+class RedisStoreTest(unittest.TestCase):
     def setUp(self):
         self.redis = fakeredis.FakeStrictRedis()
         self.store = RedisStore(self.redis)
@@ -16,6 +16,6 @@ class RedisStoreTest(unittest.TestCase):
         self.assertIsNotNone(self.store)
 
     def test_keep(self):
-        self.store.keep('key', 'value')
-        value = self.store.value_of('key')
-        self.assertEqual(value, 'value')
+        self.store.keep("key", "value")
+        value = self.store.value_of("key")
+        self.assertEqual(value, "value")

@@ -14,7 +14,8 @@ class UserVerificationResponse(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, code: int=None, verification_rate: int=None):  # noqa: E501
+
+    def __init__(self, code: int = None, verification_rate: int = None):  # noqa: E501
         """UserVerificationResponse - a model defined in Swagger
 
         :param code: The code of this UserVerificationResponse.  # noqa: E501
@@ -22,20 +23,14 @@ class UserVerificationResponse(Model):
         :param verification_rate: The verification_rate of this UserVerificationResponse.  # noqa: E501
         :type verification_rate: int
         """
-        self.swagger_types = {
-            'code': int,
-            'verification_rate': int
-        }
+        self.swagger_types = {"code": int, "verification_rate": int}
 
-        self.attribute_map = {
-            'code': 'code',
-            'verification_rate': 'verificationRate'
-        }
+        self.attribute_map = {"code": "code", "verification_rate": "verificationRate"}
         self._code = code
         self._verification_rate = verification_rate
 
     @classmethod
-    def from_dict(cls, dikt) -> 'UserVerificationResponse':
+    def from_dict(cls, dikt) -> "UserVerificationResponse":
         """Returns the dict as a model
 
         :param dikt: A dict.
@@ -64,7 +59,9 @@ class UserVerificationResponse(Model):
         :type code: int
         """
         if code is None:
-            raise ValueError("Invalid value for `code`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `code`, must not be `None`"
+            )  # noqa: E501
 
         self._code = code
 
@@ -87,6 +84,8 @@ class UserVerificationResponse(Model):
         :type verification_rate: int
         """
         if verification_rate is None:
-            raise ValueError("Invalid value for `verification_rate`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `verification_rate`, must not be `None`"
+            )  # noqa: E501
 
         self._verification_rate = verification_rate

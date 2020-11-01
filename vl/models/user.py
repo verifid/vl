@@ -14,7 +14,14 @@ class User(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, name: str=None, surname: str=None, date_of_birth: str=None, country: str=None):  # noqa: E501
+
+    def __init__(
+        self,
+        name: str = None,
+        surname: str = None,
+        date_of_birth: str = None,
+        country: str = None,
+    ):  # noqa: E501
         """User - a model defined in Swagger
 
         :param name: The name of this User.  # noqa: E501
@@ -27,17 +34,17 @@ class User(Model):
         :type country: str
         """
         self.swagger_types = {
-            'name': str,
-            'surname': str,
-            'date_of_birth': str,
-            'country': str
+            "name": str,
+            "surname": str,
+            "date_of_birth": str,
+            "country": str,
         }
 
         self.attribute_map = {
-            'name': 'name',
-            'surname': 'surname',
-            'date_of_birth': 'dateOfBirth',
-            'country': 'country'
+            "name": "name",
+            "surname": "surname",
+            "date_of_birth": "dateOfBirth",
+            "country": "country",
         }
         self._name = name
         self._surname = surname
@@ -45,7 +52,7 @@ class User(Model):
         self._country = country
 
     @classmethod
-    def from_dict(cls, dikt) -> 'User':
+    def from_dict(cls, dikt) -> "User":
         """Returns the dict as a model
 
         :param dikt: A dict.
@@ -74,7 +81,9 @@ class User(Model):
         :type name: str
         """
         if name is None:
-            raise ValueError("Invalid value for `name`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `name`, must not be `None`"
+            )  # noqa: E501
 
         self._name = name
 
@@ -97,7 +106,9 @@ class User(Model):
         :type surname: str
         """
         if surname is None:
-            raise ValueError("Invalid value for `surname`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `surname`, must not be `None`"
+            )  # noqa: E501
 
         self._surname = surname
 
@@ -120,7 +131,9 @@ class User(Model):
         :type date_of_birth: str
         """
         if date_of_birth is None:
-            raise ValueError("Invalid value for `date_of_birth`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `date_of_birth`, must not be `None`"
+            )  # noqa: E501
 
         self._date_of_birth = date_of_birth
 
@@ -143,6 +156,8 @@ class User(Model):
         :type country: str
         """
         if country is None:
-            raise ValueError("Invalid value for `country`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `country`, must not be `None`"
+            )  # noqa: E501
 
         self._country = country
